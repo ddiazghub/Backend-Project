@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 dotenv.config();
 
 function panic(message: string): never {
-  throw new Error(message);
+  throw new Error(`Error: ${message}`);
 }
 
 const PORT = Number(process.env.PORT ?? 8000);
