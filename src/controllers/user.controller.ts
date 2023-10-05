@@ -29,6 +29,7 @@ export async function login(req: Request, res: Response) {
     });
   }
 }
+
 export async function getUser(req: Request, res: Response) {
   const user = await User.findOne({ _id: req.params.id, disabled: false }).populate("role", "name");
 

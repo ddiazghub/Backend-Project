@@ -1,41 +1,15 @@
 import Model, { EnumSchema, IEnum, IResource, ResourceSchema } from "./model";
 import mongoose, { ObjectId } from "mongoose";
 
-// Una de las posibles ubicaciones de un restaurante.
-export interface ILocation extends IResource {
-  address: string;
-  maxServiceRange: number;
-  restaurant: ObjectId;
+export enum ERestaurantCategory {
+  Italian = "Italiano"
 }
 
-// Una de las posibles ubicaciones de un restaurante.
-export const Location = Model<ILocation>("Location", {
-  ...ResourceSchema,
-
-  // Dirección
-  address: {
-    type: String,
-    required: true,
-    minLength: 2,
-  },
-
-  // Rango máximo de servicio en Km
-  maxServiceRange: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-
-  // Restaurante al cual pertenece
-  restaurant: {
-    type: mongoose.Types.ObjectId, // Referencia a RestaurantSchema
-    ref: "Restaurant",
-    required: true,
-  },
-});
+export const RestaurantCategory = Model<IEnum>("RestaurantCategory", EnumSchema);
 
 export interface IRestaurant extends IResource {
   administrator: ObjectId;
+  category: ObjectId;
   deliveryTime: number;
   rating: number;
 }
@@ -50,6 +24,12 @@ export const Restaurant = Model<IRestaurant>(
     administrator: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "RestaurantCategory",
       required: true,
     },
 
