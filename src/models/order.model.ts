@@ -1,23 +1,38 @@
-import Model, { EnumSchema, IEnum, IResource, ResourceSchema }  from "./model";
-import mongoose, { ObjectId } from "mongoose";
+import Model, {
+  EnumModel,
+  IResource,
+  ResourceSchema,
+} from "./model";
+import mongoose, { ObjectId, Schema } from "mongoose";
 
 export enum EOrderState {
   Created = "Creado",
   InProgress = "En Curso",
   OnTheWay = "En Camino",
-  Delivered = "Entregado"
+  Delivered = "Entregado",
 }
 
 // Estados de un pedido
-export const IOrderState = Model<IEnum>("OrderState", EnumSchema);
+export const OrderState = EnumModel("OrderState", EOrderState);
 
 export interface IOrderProduct {
-  product: ObjectId,
-  order: ObjectId,
-  quantity: number,
+  product: ObjectId;
+  quantity: number;
 }
 
-export const OrderProduct = Model<IOrderProduct>("OrderProduct", {
+export interface IOrder {
+  createdAt?: Date;
+  updatedAt?: Date;
+  deliveryTime: Date;
+  orderRating?: number;
+  restaurant: ObjectId;
+  user: ObjectId;
+  state?: ObjectId;
+  products: IOrderProduct[];
+  disabled: boolean;
+}
+
+const OrderProductSchema = new Schema<IOrderProduct>({
   // El producto que se está pidiendo
   product: {
     type: mongoose.Types.ObjectId, // Referencia a Product
@@ -25,37 +40,26 @@ export const OrderProduct = Model<IOrderProduct>("OrderProduct", {
     required: true,
   },
 
-  // El pedido
-  order: {
-    type: mongoose.Types.ObjectId, // Referencia a OrderSchema
-    ref: "Order",
-    required: true,
-  },
-
   // Cantidad del producto que se pidió
   quantity: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
   },
 });
 
-export interface IOrder extends IResource {
-  deliveryTime: Date,
-  orderRating?: number,
-  restaurantId: ObjectId,
-  userId: ObjectId,
-}
-
 // Pedidos
 export const Order = Model<IOrder>("Order", {
-  ...ResourceSchema,
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 
   // Tiempo esperado de entrega
   deliveryTime: {
     type: Date,
     required: true,
-    min: new Date()
+    min: new Date(),
   },
 
   // Calificación del usuario a la orden. Es nula hasta que el pedido llegue a la etapa de entregado
@@ -65,16 +69,28 @@ export const Order = Model<IOrder>("Order", {
   },
 
   // El restaurante al cual se realizó la orden
-  restaurantId: {
-    type: mongoose.Types.ObjectId, // Referencia a RestaurantSchema
+  restaurant: {
+    type: mongoose.Types.ObjectId,
     ref: "Restaurant",
     required: true,
   },
 
   // El usuario que realizó el pedido
-  userId: {
-    type: mongoose.Types.ObjectId, // Referencia a UserSchema
+  user: {
+    type: mongoose.Types.ObjectId,
     ref: "User",
     required: true,
   },
-});
+
+  // El estado del pedido
+  state: {
+    type: mongoose.Types.ObjectId,
+    ref: "OrderState",
+  },
+
+  products: {
+    type: [OrderProductSchema],
+    required: true,
+    minLength: 1,
+  },
+}, { timestamps: true });

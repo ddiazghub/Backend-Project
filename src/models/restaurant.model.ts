@@ -1,17 +1,17 @@
-import Model, { EnumSchema, IEnum, IResource, ResourceSchema } from "./model";
+import Model, { IResource, ResourceSchema, EnumModel } from "./model";
 import mongoose, { ObjectId } from "mongoose";
 
-export enum ERestaurantCategory {
-  Italian = "Italiano"
+enum ERestaurantCategory {
+  Italian = "Italiano",
+  FastFood = "Comida Rápida",
 }
 
-export const RestaurantCategory = Model<IEnum>("RestaurantCategory", EnumSchema);
+export const RestaurantCategory = EnumModel("RestaurantCategory", ERestaurantCategory);
 
 export interface IRestaurant extends IResource {
   administrator: ObjectId;
   category: ObjectId;
   deliveryTime: number;
-  rating: number;
 }
 
 // Restaurantes
@@ -35,13 +35,6 @@ export const Restaurant = Model<IRestaurant>(
 
     // Tiempo de entrega esperado del restaurante
     deliveryTime: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
-    // Calificación promedio de todas las ventas del restaurante
-    rating: {
       type: Number,
       required: true,
       min: 0,

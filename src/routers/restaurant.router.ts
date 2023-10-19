@@ -1,4 +1,6 @@
+import config from "../config";
 import { Router } from "express";
+
 import {
   createRestaurant,
   deleteRestaurant,

@@ -1,13 +1,13 @@
 import mongoose, { ObjectId } from "mongoose";
-import Model, { ResourceSchema, EnumSchema, IEnum, IResource } from "./model";
+import Model, { ResourceSchema, IResource, EnumModel } from "./model";
 
-// Roles de usuario. Usuario, Administrador, etc...
-export enum EUserRole {
+enum EUserRole {
   User = "Usuario",
   Admin = "Administrador",
 }
 
-export const UserRole = Model<IEnum>("UserRole", EnumSchema);
+// Roles de usuario. Usuario, Administrador, etc...
+export const UserRole = EnumModel("UserRole", EUserRole);
 
 export interface IUser extends IResource {
   lastName: string,
@@ -35,7 +35,6 @@ export const User = Model<IUser>("User", {
     required: true,
   },
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   phone: {
     type: Number,
