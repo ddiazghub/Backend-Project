@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
 import { setDifference } from "../helpers";
-import { Enum, EnumMap, IEnumModel, IModel } from "../models/model";
+import { EnumMap, IEnumModel, IModel } from "../models/model";
 import mongoose from "mongoose";
 import errors, { HttpError } from "../models/errors";
 
-export async function seedEnum<E extends Enum, M extends IEnumModel<E>>(
-  collection: M,
-) {
+export async function seedEnum(collection: IEnumModel) {
   const documents = await collection.find();
   const docs = new Set<string>(documents.map((record) => record.name));
-  const values = new Set<string>(Object.values(collection.values));
+  const values = new Set<string>(collection.values);
 
   const toAdd = setDifference(values, docs);
   const toRemove = setDifference(docs, values);
@@ -18,9 +16,7 @@ export async function seedEnum<E extends Enum, M extends IEnumModel<E>>(
   await collection.create([...toAdd].map((record) => ({ name: record })));
 }
 
-export function EnumMapping<E extends Enum>(
-  model: IEnumModel<E>,
-) {
+export function EnumMapping(model: IEnumModel) {
   let mapping: EnumMap | undefined;
 
   return async () => {

@@ -44,8 +44,6 @@ export const ResourceSchema = {
   },
 };
 
-export type Enum = { [key: number]: string }
-
 export interface DisplayEnum {
   _id: string,
   name: string,
@@ -55,13 +53,13 @@ export type IDoc<T> = T & { _id: mongoose.Types.ObjectId };
 export type IDocument<T> = mongoose.Document<unknown, object, T> & IDoc<T>;
 export type IModel<T> = mongoose.Model<T, object, object, object, IDocument<T>>;
 
-export type IEnumModel<E extends Enum> = IModel<IEnum> & { values: { [K in keyof E]: E[K] } };
+export type IEnumModel = IModel<IEnum> & { values: string[] };
 
-export function EnumModel<E extends Enum>(name: string, enumeration: E) {
+export function EnumModel(name: string, values: string[]) {
   const model = mongoose.model(name, new Schema(EnumSchema));
-  const enumModel = model as unknown as IEnumModel<E>;
+  const enumModel = model as unknown as IEnumModel;
 
-  enumModel.values = enumeration;
+  enumModel.values = values;
 
   return enumModel;
 }

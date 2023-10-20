@@ -1,18 +1,17 @@
 import mongoose, { ObjectId } from "mongoose";
 import Model, {
-  DisplayEnum,
   EnumModel,
   IResource,
   ResourceSchema,
 } from "./model";
 
-enum EUserRole {
-  User = "Usuario",
-  Admin = "Administrador",
-}
+const UserRoleValues = [
+  "Usuario",
+  "Administrador",
+];
 
 // Roles de usuario. Usuario, Administrador, etc...
-export const UserRole = EnumModel("UserRole", EUserRole);
+export const UserRole = EnumModel("UserRole", UserRoleValues);
 
 export interface IUser extends IResource {
   lastName: string;

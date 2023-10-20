@@ -1,20 +1,15 @@
-import Model, {
-  EnumModel,
-  IDoc,
-  IResource,
-  ResourceSchema,
-} from "./model";
+import Model, { EnumModel } from "./model";
 import mongoose, { ObjectId, Schema } from "mongoose";
 
-export enum EOrderState {
-  Created = "Creado",
-  InProgress = "En Curso",
-  OnTheWay = "En Camino",
-  Delivered = "Entregado",
-}
+export const OrderStateValues = [
+  "Creado",
+  "En Curso",
+  "En Camino",
+  "Entregado",
+];
 
 // Estados de un pedido
-export const OrderState = EnumModel("OrderState", EOrderState);
+export const OrderState = EnumModel("OrderState", OrderStateValues);
 
 export interface IOrderProduct {
   product: ObjectId;
