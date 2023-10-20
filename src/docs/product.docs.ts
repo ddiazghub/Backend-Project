@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Tags,
 } from "tsoa";
 
 import { IMessage } from "../models/model";
@@ -21,6 +22,7 @@ import { mock } from "../helpers";
  *   "image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
  *   "category": "65305444746510934b074df9",
  *   "restaurant": "65307280beb5043d524138d3",
+ *   "cost": 30,
  * }
  */
 export interface ProductCreation {
@@ -29,6 +31,7 @@ export interface ProductCreation {
   image: string,
   category: string,
   restaurant: string,
+  cost: number,
 }
 
 /**
@@ -43,6 +46,7 @@ export interface ProductCreation {
  *     "name": "Hamburguesas"
  *   },
  *   "restaurant": "65307280beb5043d524138d3",
+ *   "cost": 30,
  *   "disabled": false,
  *   "_v": 0
  * }
@@ -54,6 +58,7 @@ export interface Product {
   image: string,
   category: { _id: string; name: string };
   restaurant: string,
+  cost: number,
   disabled: boolean;
   _v: number;
 }
@@ -71,22 +76,25 @@ export interface ProductCategory {
 }
 
 /**
- * CRUD de usuarios.
+ * CRUD de productos.
  */
 @Route("products")
+@Tags("Products")
 export abstract class ProductController extends Controller {
   /**
-   * Obtiene todos los usuarios.
+   * Obtiene todos los productos que cumplan con los filtros.
+   * @param restaurant Búsqueda por id de restaurante
+   * @param category Búsqueda por id o nombre de categoría
    * @summary Get Products
    */
   @Get("")
-  public async getProducts(): Promise<Product[]> {
+  public async getProducts(@Query() restaurant: string, @Query() category: string): Promise<Product[]> {
     return mock();
   }
 
   /**
-   * Obtiene todos los roles de usuario.
-   * @summary Get Roles
+   * Obtiene todas las categorías de productos.
+   * @summary Get Categories
    */
   @Get("categories")
   public async getCategories(): Promise<ProductCategory[]> {
@@ -94,8 +102,8 @@ export abstract class ProductController extends Controller {
   }
 
   /**
-   * Obtiene los datos de un usuario.
-   * @param id Id del usuario
+   * Obtiene los datos de un producto.
+   * @param id Id del producto
    * @summary Get Product
    */
   @Get("{id}")
@@ -104,18 +112,18 @@ export abstract class ProductController extends Controller {
   }
 
   /**
-   * Registra un nuevo usuario en la base de datos.
-   * @param product El usuario a registrar
+   * Crea un nuevo producto en la base de datos.
+   * @param product Datos del nuevo producto a crear
    * @summary Create Product
    */
   @Post("")
-  public async register(@Body() product: ProductCreation): Promise<Product> {
+  public async createProduct(@Body() product: ProductCreation): Promise<Product> {
     return mock();
   }
 
   /**
-   * Edita los datos de un usuario. El usuario es identificado por la propiedad _id.
-   * @param product El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben.
+   * Edita los datos de un producto. El producto es identificado por la propiedad _id.
+   * @param product El producto a editar. Todos los campos que estén definidos en este objeto se sobreescriben.
    * @summary Update Product
    */
   @Patch("")
@@ -124,8 +132,8 @@ export abstract class ProductController extends Controller {
   }
 
   /**
-   * Deshabilita un usuario, este ya no se podrá leer.
-   * @param id Id del usuario.
+   * Deshabilita un producto, este ya no se podrá leer.
+   * @param id Id del producto.
    * @summary Delete Product
    */
   @Delete("{id}")

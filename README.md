@@ -7,6 +7,12 @@ npm install
 npm start
 ```
 
+Para iniciar el servidor en modo desarrollador ejecute:
+
+```console
+npm run dev
+```
+
 Se necesita tener instalado el compilador de typescript para ejecutar el servidor:
 
 ```console

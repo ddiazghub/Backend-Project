@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import { ceilDate, setDifference } from "../helpers";
 import { Product } from "../models/product.model";
-import { IOrderProduct, Order, OrderState } from "../models/order.model";
+import {
+  IOrder,
+  IOrderProduct,
+  Order,
+  OrderState,
+} from "../models/order.model";
 import { EnumMapping, ResourceController } from "./controller";
 import { HttpError } from "../models/errors";
 
@@ -10,7 +15,11 @@ const state = new ResourceController(OrderState);
 
 const States = EnumMapping(OrderState);
 
-export async function getOrders(req: Request, res: Response) {
+export async function getOrders(
+  req: Request,
+  res: Response,
+  extraFilters: object = {},
+) {
   const empty = {};
   const user = req.query.user ? { user: req.query.user } : {};
 
@@ -24,17 +33,18 @@ export async function getOrders(req: Request, res: Response) {
     ? { $lte: ceilDate(new Date(req.query.endDate as string)) }
     : empty;
 
-  const dateRange = startDate === empty && endDate === empty ? empty : { createdAt: { ...startDate, ...endDate } };
-  const filters = { ...user, ...restaurant, ...dateRange };
+  const dateRange = startDate === empty && endDate === empty
+    ? empty
+    : { createdAt: { ...startDate, ...endDate } };
+  const filters = { ...user, ...restaurant, ...dateRange, ...extraFilters };
 
   await order.getResources(req, res, filters);
 }
 
 export async function getUnconfirmed(req: Request, res: Response) {
-  const filters = { state: (await States()).created };
-
-  await order.getResources(req, res, filters);
+  await getOrders(req, res, { state: (await States()).created });
 }
+
 export async function getStates(req: Request, res: Response) {
   await state.getAll(req, res);
 }
@@ -44,9 +54,19 @@ export async function getOrder(req: Request, res: Response) {
 }
 
 export async function createOrder(req: Request, res: Response) {
-  const products = (req.body.products as IOrderProduct[]).map(product => product.product.toString());
+  const body = req.body as IOrder;
+
+  const products = (body.products as IOrderProduct[]).map((product) =>
+    product.product.toString()
+  );
+
   const prods = new Set(products);
-  const validProducts = await Product.find({ _id: { $in: products } });
+
+  const validProducts = await Product.find({
+    _id: { $in: products },
+    restaurant: body.restaurant,
+  });
+
   const valid = new Set(validProducts.map((product) => product._id.toString()));
   const invalid = setDifference(prods, valid);
 

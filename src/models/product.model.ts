@@ -15,6 +15,7 @@ export interface IProduct extends IResource {
   image: string,
   category: ObjectId,
   restaurant: ObjectId,
+  cost: number,
 }
 
 export const Product = Model<IProduct>(
@@ -54,6 +55,12 @@ export const Product = Model<IProduct>(
       type: mongoose.Types.ObjectId, // Referencia a RestaurantSchema
       ref: "Restaurant",
       required: true,
+    },
+
+    cost: {
+      type: Number,
+      required: true,
+      min: 0,
     },
   },
 );

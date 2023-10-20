@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Tags,
 } from "tsoa";
 
 import { IMessage } from "../models/model";
@@ -82,6 +83,7 @@ export interface Role {
  * CRUD de usuarios.
  */
 @Route("users")
+@Tags("Users")
 export abstract class UserController extends Controller {
   /**
    * Obtiene todos los usuarios.

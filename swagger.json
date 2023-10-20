@@ -6,6 +6,160 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Order": {
+				"description": "Esquema con el cual el backend retorna un pedido.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deliveryTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"orderRating": {
+						"type": "number",
+						"format": "double"
+					},
+					"products": {
+						"items": {
+							"properties": {
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"product": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity",
+								"product"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"disabled": {
+						"type": "boolean"
+					},
+					"restaurant": {
+						"type": "string"
+					},
+					"user": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"_v": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"_id",
+					"createdAt",
+					"updatedAt",
+					"deliveryTime",
+					"products",
+					"disabled",
+					"restaurant",
+					"user",
+					"state",
+					"_v"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderState": {
+				"description": "Esquema con el cual el backend retorna el estado de un pedido.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderCreation": {
+				"description": "Esquema para crear un pedido.",
+				"properties": {
+					"deliveryTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"products": {
+						"items": {
+							"properties": {
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"product": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity",
+								"product"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"restaurant": {
+						"type": "string"
+					},
+					"user": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"deliveryTime",
+					"products",
+					"restaurant",
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IMessage": {
+				"description": "Respuesta simple con mensaje.",
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"status": 404,
+					"message": "NOT FOUND"
+				}
+			},
 			"Product": {
 				"description": "Esquema con el cual el backend retorna un producto.",
 				"properties": {
@@ -39,6 +193,10 @@
 					"restaurant": {
 						"type": "string"
 					},
+					"cost": {
+						"type": "number",
+						"format": "double"
+					},
 					"disabled": {
 						"type": "boolean"
 					},
@@ -54,6 +212,7 @@
 					"image",
 					"category",
 					"restaurant",
+					"cost",
 					"disabled",
 					"_v"
 				],
@@ -69,6 +228,7 @@
 						"name": "Hamburguesas"
 					},
 					"restaurant": "65307280beb5043d524138d3",
+					"cost": 30,
 					"disabled": false,
 					"_v": 0
 				}
@@ -107,6 +267,10 @@
 					},
 					"restaurant": {
 						"type": "string"
+					},
+					"cost": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -114,32 +278,11 @@
 					"description",
 					"image",
 					"category",
-					"restaurant"
+					"restaurant",
+					"cost"
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"IMessage": {
-				"description": "Respuesta simple con mensaje.",
-				"properties": {
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"status",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false,
-				"example": {
-					"status": 404,
-					"message": "NOT FOUND"
-				}
 			},
 			"Restaurant": {
 				"description": "Esquema con el cual el backend retorna un restaurante.",
@@ -421,6 +564,299 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/orders": {
+			"get": {
+				"operationId": "GetOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Order"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los pedidos que cumplan con los filtros.",
+				"summary": "Get Orders",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Búsqueda por id del usuario que creó los pedidos",
+						"in": "query",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Búsqueda por id de restaurante al cual se le hicieron los pedidos",
+						"in": "query",
+						"name": "restaurant",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Se retornarán los pedidos creados despues de esta fecha",
+						"in": "query",
+						"name": "startDate",
+						"required": true,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Se retornarán los pedidos creados antes de esta fecha",
+						"in": "query",
+						"name": "endDate",
+						"required": true,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Order"
+								}
+							}
+						}
+					}
+				},
+				"description": "Crea un nuevo pedido en la base de datos.",
+				"summary": "Create Order",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Datos del nuevo pedido a crear",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrderCreation",
+								"description": "Datos del nuevo pedido a crear"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "UpdateOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Order"
+								}
+							}
+						}
+					}
+				},
+				"description": "Edita los datos de un pedido. El pedido es identificado por la propiedad _id.",
+				"summary": "Update Order",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "El pedido a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Order",
+								"description": "El pedido a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/unconfirmed": {
+			"get": {
+				"operationId": "GetUnconfirmed",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Order"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los pedidos sin aceptar por el restaurante que cumplan con los filtros.",
+				"summary": "Get Unconfirmed Orders",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Búsqueda por id del usuario que creó los pedidos",
+						"in": "query",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Búsqueda por id de restaurante al cual se le hicieron los pedidos",
+						"in": "query",
+						"name": "restaurant",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Se retornarán los pedidos creados despues de esta fecha",
+						"in": "query",
+						"name": "startDate",
+						"required": true,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					},
+					{
+						"description": "Se retornarán los pedidos creados antes de esta fecha",
+						"in": "query",
+						"name": "endDate",
+						"required": true,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/orders/states": {
+			"get": {
+				"operationId": "GetStates",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OrderState"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todas los estados que los pedidos pueden tener.",
+				"summary": "Get States",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/orders/{id}": {
+			"get": {
+				"operationId": "GetOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Order"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene los datos de un pedido.",
+				"summary": "Get Order",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del pedido",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deshabilita un pedido, este ya no se podrá leer.",
+				"summary": "Delete Order",
+				"tags": [
+					"Orders"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del pedido.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/products": {
 			"get": {
 				"operationId": "GetProducts",
@@ -439,13 +875,35 @@
 						}
 					}
 				},
-				"description": "Obtiene todos los usuarios.",
+				"description": "Obtiene todos los productos que cumplan con los filtros.",
 				"summary": "Get Products",
+				"tags": [
+					"Products"
+				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"description": "Búsqueda por id de restaurante",
+						"in": "query",
+						"name": "restaurant",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Búsqueda por id o nombre de categoría",
+						"in": "query",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			},
 			"post": {
-				"operationId": "Register",
+				"operationId": "CreateProduct",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -458,18 +916,21 @@
 						}
 					}
 				},
-				"description": "Registra un nuevo usuario en la base de datos.",
+				"description": "Crea un nuevo producto en la base de datos.",
 				"summary": "Create Product",
+				"tags": [
+					"Products"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"description": "El usuario a registrar",
+					"description": "Datos del nuevo producto a crear",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/ProductCreation",
-								"description": "El usuario a registrar"
+								"description": "Datos del nuevo producto a crear"
 							}
 						}
 					}
@@ -489,18 +950,21 @@
 						}
 					}
 				},
-				"description": "Edita los datos de un usuario. El usuario es identificado por la propiedad _id.",
+				"description": "Edita los datos de un producto. El producto es identificado por la propiedad _id.",
 				"summary": "Update Product",
+				"tags": [
+					"Products"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
+					"description": "El producto a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/Product",
-								"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
+								"description": "El producto a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
 							}
 						}
 					}
@@ -525,8 +989,11 @@
 						}
 					}
 				},
-				"description": "Obtiene todos los roles de usuario.",
-				"summary": "Get Roles",
+				"description": "Obtiene todas las categorías de productos.",
+				"summary": "Get Categories",
+				"tags": [
+					"Products"
+				],
 				"security": [],
 				"parameters": []
 			}
@@ -546,12 +1013,15 @@
 						}
 					}
 				},
-				"description": "Obtiene los datos de un usuario.",
+				"description": "Obtiene los datos de un producto.",
 				"summary": "Get Product",
+				"tags": [
+					"Products"
+				],
 				"security": [],
 				"parameters": [
 					{
-						"description": "Id del usuario",
+						"description": "Id del producto",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -575,12 +1045,15 @@
 						}
 					}
 				},
-				"description": "Deshabilita un usuario, este ya no se podrá leer.",
+				"description": "Deshabilita un producto, este ya no se podrá leer.",
 				"summary": "Delete Product",
+				"tags": [
+					"Products"
+				],
 				"security": [],
 				"parameters": [
 					{
-						"description": "Id del usuario.",
+						"description": "Id del producto.",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -609,8 +1082,11 @@
 						}
 					}
 				},
-				"description": "Obtiene todos los restaurantes.",
+				"description": "Obtiene todos los restaurantes que cumplan con los filtros.",
 				"summary": "Get Restaurants",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -649,6 +1125,9 @@
 				},
 				"description": "Crea un nuevo restaurante en la base de datos.",
 				"summary": "Create Restaurant",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -678,6 +1157,9 @@
 				},
 				"description": "Edita los datos de un restaurant. El restaurant es identificado por la propiedad _id.",
 				"summary": "Update Restaurant",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -712,6 +1194,9 @@
 				},
 				"description": "Obtiene totas las categorias de restaurante.",
 				"summary": "Get Categories",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": []
 			}
@@ -733,6 +1218,9 @@
 				},
 				"description": "Obtiene los datos de un restaurante.",
 				"summary": "Get Restaurant",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -762,6 +1250,9 @@
 				},
 				"description": "Deshabilita un restaurante, este ya no se podrá leer.",
 				"summary": "Delete Restaurant",
+				"tags": [
+					"Restaurants"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -796,6 +1287,9 @@
 				},
 				"description": "Obtiene todos los usuarios.",
 				"summary": "Get Users",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": []
 			},
@@ -815,6 +1309,9 @@
 				},
 				"description": "Registra un nuevo usuario en la base de datos.",
 				"summary": "Create User",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -846,6 +1343,9 @@
 				},
 				"description": "Edita los datos de un usuario. El usuario es identificado por la propiedad _id.",
 				"summary": "Update User",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -882,6 +1382,9 @@
 				},
 				"description": "Obtiene todos los roles de usuario.",
 				"summary": "Get Roles",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": []
 			}
@@ -903,6 +1406,9 @@
 				},
 				"description": "Obtiene los datos de un usuario.",
 				"summary": "Get User",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -932,6 +1438,9 @@
 				},
 				"description": "Deshabilita un usuario, este ya no se podrá leer.",
 				"summary": "Delete User",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -963,6 +1472,9 @@
 				},
 				"description": "Inicia sesión con los credenciales suministrados.",
 				"summary": "Login",
+				"tags": [
+					"Users"
+				],
 				"security": [],
 				"parameters": [
 					{

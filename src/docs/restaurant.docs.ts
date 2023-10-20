@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Tags,
 } from "tsoa";
 
 import { IMessage } from "../models/model";
@@ -70,9 +71,10 @@ export interface RestaurantCategory {
  * CRUD de usuarios.
  */
 @Route("restaurants")
+@Tags("Restaurants")
 export abstract class UserController extends Controller {
   /**
-   * Obtiene todos los restaurantes.
+   * Obtiene todos los restaurantes que cumplan con los filtros.
    * @param name Búsqueda por nombre de restaurantes
    * @param category Búsqueda por id o nombre de categoría
    * @summary Get Restaurants

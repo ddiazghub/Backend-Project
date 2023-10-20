@@ -21,25 +21,16 @@ export interface IOrderProduct {
   quantity: number;
 }
 
-export interface IBaseOrder {
+export interface IOrder {
   createdAt?: Date;
   updatedAt?: Date;
   deliveryTime: Date;
   orderRating?: number;
   products: IOrderProduct[];
   disabled: boolean;
-}
-
-export interface IOrder extends IBaseOrder {
   restaurant: ObjectId;
   user: ObjectId;
   state?: ObjectId;
-}
-
-export interface IDocOrder extends IDoc<IBaseOrder> {
-  restaurant: string;
-  user: string;
-  state?: string;
 }
 
 const OrderProductSchema = new Schema<IOrderProduct>({
