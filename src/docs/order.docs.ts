@@ -22,7 +22,7 @@ import { mock } from "../helpers";
  *     { "product": "6530777d23e50c837de795d4", "quantity": 3 }
  *   ],
  *   "restaurant": "65307280beb5043d524138d3",
- *   "user": "6531618e6025da22956875a6",
+ *   "user": "6531618e6025da22956875a6"
  * }
  */
 export interface OrderCreation {
@@ -30,6 +30,28 @@ export interface OrderCreation {
   products: { product: string; quantity: number }[];
   restaurant: string;
   user: string;
+}
+
+/**
+ * Esquema para editar un pedido.
+ * @example {
+ *   "_id": "6531a1b0e9c33a3af568e47e",
+ *   "deliveryTime": "2030-10-20T04:03:42.164Z",
+ *   "orderRating": 4.8,
+ *   "products": [
+ *     { "product": "6530777d23e50c837de795d4", "quantity": 3 }
+ *   ],
+ *   "user": "6531618e6025da22956875a6",
+ *   "state": "65305444746510934b074dff"
+ * }
+ */
+export interface OrderUpdate {
+  _id: string;
+  deliveryTime?: Date;
+  orderRating?: number;
+  products?: { product: string; quantity: number }[];
+  user?: string;
+  state?: string;
 }
 
 /**
@@ -72,7 +94,7 @@ export interface Order {
  * @example {
  *   "_id": "65305444746510934b074dff",
  *   "name": "Entregado"
- * },
+ * }
  */
 export interface OrderState {
   _id: string;
@@ -95,10 +117,10 @@ export abstract class OrderController extends Controller {
    */
   @Get("")
   public async getOrders(
-    @Query() user: string,
-    @Query() restaurant: string,
-    @Query() startDate: Date,
-    @Query() endDate: Date,
+    @Query() user?: string,
+    @Query() restaurant?: string,
+    @Query() startDate?: Date,
+    @Query() endDate?: Date,
   ): Promise<Order[]> {
     return mock();
   }
@@ -113,10 +135,10 @@ export abstract class OrderController extends Controller {
    */
   @Get("unconfirmed")
   public async getUnconfirmed(
-    @Query() user: string,
-    @Query() restaurant: string,
-    @Query() startDate: Date,
-    @Query() endDate: Date,
+    @Query() user?: string,
+    @Query() restaurant?: string,
+    @Query() startDate?: Date,
+    @Query() endDate?: Date,
   ): Promise<Order[]> {
     return mock();
   }
@@ -156,7 +178,7 @@ export abstract class OrderController extends Controller {
    * @summary Update Order
    */
   @Patch("")
-  public async updateOrder(@Body() order: Order): Promise<Order> {
+  public async updateOrder(@Body() order: OrderUpdate): Promise<Order> {
     return mock();
   }
 

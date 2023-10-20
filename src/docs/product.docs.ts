@@ -18,20 +18,42 @@ import { mock } from "../helpers";
  * Esquema para crear un producto.
  * @example {
  *   "name": "Giga Mac",
- *   "description": "45000 kCal para el viaje garantizado al hospital",
+ *   "description": "45000 kCal y viaje garantizado al hospital",
  *   "image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
  *   "category": "65305444746510934b074df9",
  *   "restaurant": "65307280beb5043d524138d3",
- *   "cost": 30,
+ *   "cost": 30
  * }
  */
 export interface ProductCreation {
   name: string;
-  description: string,
-  image: string,
-  category: string,
-  restaurant: string,
-  cost: number,
+  description: string;
+  image: string;
+  category: string;
+  restaurant: string;
+  cost: number;
+}
+
+/**
+ * Esquema para editar un producto.
+ * @example {
+ *   "_id": "6530777d23e50c837de795d4",
+ *   "name": "Giga Mac",
+ *   "description": "45000 kCal y viaje garantizado al hospital",
+ *   "image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
+ *   "category": "65305444746510934b074df9",
+ *   "restaurant": "65307280beb5043d524138d3",
+ *   "cost": 30
+ * }
+ */
+export interface ProductUpdate {
+  _id: string;
+  name?: string;
+  description?: string;
+  image?: string;
+  category?: string;
+  restaurant?: string;
+  cost?: number;
 }
 
 /**
@@ -39,7 +61,7 @@ export interface ProductCreation {
  * @example {
  *   "_id": "6530777d23e50c837de795d4",
  *   "name": "Giga Mac",
- *   "description": "45000 kCal de viaje garantizado al hospital",
+ *   "description": "45000 kCal y viaje garantizado al hospital",
  *   "image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
  *   "category": {
  *     "_id": "65305444746510934b074df9",
@@ -54,11 +76,11 @@ export interface ProductCreation {
 export interface Product {
   _id: string;
   name: string;
-  description: string,
-  image: string,
+  description: string;
+  image: string;
   category: { _id: string; name: string };
-  restaurant: string,
-  cost: number,
+  restaurant: string;
+  cost: number;
   disabled: boolean;
   _v: number;
 }
@@ -71,8 +93,8 @@ export interface Product {
  * },
  */
 export interface ProductCategory {
-  _id: string,
-  name: string,
+  _id: string;
+  name: string;
 }
 
 /**
@@ -88,7 +110,10 @@ export abstract class ProductController extends Controller {
    * @summary Get Products
    */
   @Get("")
-  public async getProducts(@Query() restaurant: string, @Query() category: string): Promise<Product[]> {
+  public async getProducts(
+    @Query() restaurant?: string,
+    @Query() category?: string,
+  ): Promise<Product[]> {
     return mock();
   }
 
@@ -117,7 +142,9 @@ export abstract class ProductController extends Controller {
    * @summary Create Product
    */
   @Post("")
-  public async createProduct(@Body() product: ProductCreation): Promise<Product> {
+  public async createProduct(
+    @Body() product: ProductCreation,
+  ): Promise<Product> {
     return mock();
   }
 
@@ -127,7 +154,7 @@ export abstract class ProductController extends Controller {
    * @summary Update Product
    */
   @Patch("")
-  public async updateProduct(@Body() product: Product): Promise<Product> {
+  public async updateProduct(@Body() product: ProductUpdate): Promise<Product> {
     return mock();
   }
 

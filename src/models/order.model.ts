@@ -74,6 +74,7 @@ export const Order = Model<IOrder>("Order", {
     type: mongoose.Types.ObjectId,
     ref: "Restaurant",
     required: true,
+    immutable: true,
   },
 
   // El usuario que realizó el pedido

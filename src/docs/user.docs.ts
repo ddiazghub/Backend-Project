@@ -37,6 +37,28 @@ export interface UserCreation {
 }
 
 /**
+ * Esquema para editar un usuario.
+ * @example {
+ *   "_id": "6531618e6025da22956875a6",
+ *   "name": "pepito",
+ *   "lastName": "perez",
+ *   "email": "elpepe@email.com",
+ *   "password": "0123456789ABCDEF",
+ *   "phone": 10000000001,
+ *   "role": "65305445746510934b074e05"
+ * }
+ */
+export interface UserUpdate {
+  _id: string;
+  name?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: number;
+  role?: string;
+}
+
+/**
  * Esquema con el cual el backend retorna un usuario.
  * @example {
  *   "_id": "6531618e6025da22956875a6",
@@ -143,7 +165,7 @@ export abstract class UserController extends Controller {
    * @summary Update User
    */
   @Patch("")
-  public async updateUser(@Body() user: User): Promise<User> {
+  public async updateUser(@Body() user: UserUpdate): Promise<User> {
     return mock();
   }
 

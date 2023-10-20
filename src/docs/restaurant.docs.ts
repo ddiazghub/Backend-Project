@@ -31,6 +31,24 @@ export interface RestaurantCreation {
 }
 
 /**
+ * Esquema para editar un restaurante.
+ * @example {
+ *   "_id": "65307280beb5043d524138d3",
+ *   "name": "McDonalds",
+ *   "administrator": "6531618e6025da22956875a6",
+ *   "category": "65305444746510934b074df9",
+ *   "deliveryTime": 30
+ * }
+ */
+export interface RestaurantUpdate {
+  _id: string;
+  name?: string;
+  administrator?: string;
+  deliveryTime?: number;
+  category?: string;
+}
+
+/**
  * Esquema con el cual el backend retorna un restaurante.
  * @example {
  *   "_id": "65307280beb5043d524138d3",
@@ -41,7 +59,7 @@ export interface RestaurantCreation {
  *     "_id": "65305444746510934b074df9",
  *     "name": "Comida Rápida"
  *   },
- *   "deliveryTime": 15,
+ *   "deliveryTime": 30,
  *   "__v": 0
  * }
  */
@@ -80,7 +98,10 @@ export abstract class UserController extends Controller {
    * @summary Get Restaurants
    */
   @Get("")
-  public async getRestaurants(@Query() name: string, @Query() category: string): Promise<Restaurant[]> {
+  public async getRestaurants(
+    @Query() name?: string,
+    @Query() category?: string,
+  ): Promise<Restaurant[]> {
     return mock();
   }
 
@@ -109,7 +130,9 @@ export abstract class UserController extends Controller {
    * @summary Create Restaurant
    */
   @Post("")
-  public async createRestaurant(@Body() restaurant: RestaurantCreation): Promise<Restaurant> {
+  public async createRestaurant(
+    @Body() restaurant: RestaurantCreation,
+  ): Promise<Restaurant> {
     return mock();
   }
 
@@ -119,7 +142,9 @@ export abstract class UserController extends Controller {
    * @summary Update Restaurant
    */
   @Patch("")
-  public async updateRestaurant(@Body() restaurant: Restaurant): Promise<Restaurant> {
+  public async updateRestaurant(
+    @Body() restaurant: RestaurantUpdate,
+  ): Promise<Restaurant> {
     return mock();
   }
 

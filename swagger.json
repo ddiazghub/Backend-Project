@@ -94,7 +94,11 @@
 					"name"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": false,
+				"example": {
+					"_id": "65305444746510934b074dff",
+					"name": "Entregado"
+				}
 			},
 			"OrderCreation": {
 				"description": "Esquema para crear un pedido.",
@@ -136,7 +140,77 @@
 					"user"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": false,
+				"example": {
+					"deliveryTime": "2030-10-20T04:03:42.164Z",
+					"products": [
+						{
+							"product": "6530777d23e50c837de795d4",
+							"quantity": 3
+						}
+					],
+					"restaurant": "65307280beb5043d524138d3",
+					"user": "6531618e6025da22956875a6"
+				}
+			},
+			"OrderUpdate": {
+				"description": "Esquema para editar un pedido.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"deliveryTime": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"orderRating": {
+						"type": "number",
+						"format": "double"
+					},
+					"products": {
+						"items": {
+							"properties": {
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"product": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity",
+								"product"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"user": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "6531a1b0e9c33a3af568e47e",
+					"deliveryTime": "2030-10-20T04:03:42.164Z",
+					"orderRating": 4.8,
+					"products": [
+						{
+							"product": "6530777d23e50c837de795d4",
+							"quantity": 3
+						}
+					],
+					"user": "6531618e6025da22956875a6",
+					"state": "65305444746510934b074dff"
+				}
 			},
 			"IMessage": {
 				"description": "Respuesta simple con mensaje.",
@@ -221,7 +295,7 @@
 				"example": {
 					"_id": "6530777d23e50c837de795d4",
 					"name": "Giga Mac",
-					"description": "45000 kCal de viaje garantizado al hospital",
+					"description": "45000 kCal y viaje garantizado al hospital",
 					"image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
 					"category": {
 						"_id": "65305444746510934b074df9",
@@ -282,7 +356,56 @@
 					"cost"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": false,
+				"example": {
+					"name": "Giga Mac",
+					"description": "45000 kCal y viaje garantizado al hospital",
+					"image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
+					"category": "65305444746510934b074df9",
+					"restaurant": "65307280beb5043d524138d3",
+					"cost": 30
+				}
+			},
+			"ProductUpdate": {
+				"description": "Esquema para editar un producto.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"restaurant": {
+						"type": "string"
+					},
+					"cost": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "6530777d23e50c837de795d4",
+					"name": "Giga Mac",
+					"description": "45000 kCal y viaje garantizado al hospital",
+					"image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
+					"category": "65305444746510934b074df9",
+					"restaurant": "65307280beb5043d524138d3",
+					"cost": 30
+				}
 			},
 			"Restaurant": {
 				"description": "Esquema con el cual el backend retorna un restaurante.",
@@ -343,7 +466,7 @@
 						"_id": "65305444746510934b074df9",
 						"name": "Comida Rápida"
 					},
-					"deliveryTime": 15,
+					"deliveryTime": 30,
 					"__v": 0
 				}
 			},
@@ -394,6 +517,39 @@
 				"type": "object",
 				"additionalProperties": false,
 				"example": {
+					"name": "McDonalds",
+					"administrator": "6531618e6025da22956875a6",
+					"category": "65305444746510934b074df9",
+					"deliveryTime": 30
+				}
+			},
+			"RestaurantUpdate": {
+				"description": "Esquema para editar un restaurante.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"administrator": {
+						"type": "string"
+					},
+					"deliveryTime": {
+						"type": "number",
+						"format": "double"
+					},
+					"category": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "65307280beb5043d524138d3",
 					"name": "McDonalds",
 					"administrator": "6531618e6025da22956875a6",
 					"category": "65305444746510934b074df9",
@@ -547,6 +703,47 @@
 					"birthday": "2000-10-20T04:03:42.164Z",
 					"role": "65305445746510934b074e05"
 				}
+			},
+			"UserUpdate": {
+				"description": "Esquema para editar un usuario.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "number",
+						"format": "double"
+					},
+					"role": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "6531618e6025da22956875a6",
+					"name": "pepito",
+					"lastName": "perez",
+					"email": "elpepe@email.com",
+					"password": "0123456789ABCDEF",
+					"phone": 10000000001,
+					"role": "65305445746510934b074e05"
+				}
 			}
 		},
 		"securitySchemes": {}
@@ -593,7 +790,7 @@
 						"description": "Búsqueda por id del usuario que creó los pedidos",
 						"in": "query",
 						"name": "user",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -602,7 +799,7 @@
 						"description": "Búsqueda por id de restaurante al cual se le hicieron los pedidos",
 						"in": "query",
 						"name": "restaurant",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -611,7 +808,7 @@
 						"description": "Se retornarán los pedidos creados despues de esta fecha",
 						"in": "query",
 						"name": "startDate",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "date-time",
 							"type": "string"
@@ -621,7 +818,7 @@
 						"description": "Se retornarán los pedidos creados antes de esta fecha",
 						"in": "query",
 						"name": "endDate",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "date-time",
 							"type": "string"
@@ -690,7 +887,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Order",
+								"$ref": "#/components/schemas/OrderUpdate",
 								"description": "El pedido a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
 							}
 						}
@@ -727,7 +924,7 @@
 						"description": "Búsqueda por id del usuario que creó los pedidos",
 						"in": "query",
 						"name": "user",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -736,7 +933,7 @@
 						"description": "Búsqueda por id de restaurante al cual se le hicieron los pedidos",
 						"in": "query",
 						"name": "restaurant",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -745,7 +942,7 @@
 						"description": "Se retornarán los pedidos creados despues de esta fecha",
 						"in": "query",
 						"name": "startDate",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "date-time",
 							"type": "string"
@@ -755,7 +952,7 @@
 						"description": "Se retornarán los pedidos creados antes de esta fecha",
 						"in": "query",
 						"name": "endDate",
-						"required": true,
+						"required": false,
 						"schema": {
 							"format": "date-time",
 							"type": "string"
@@ -886,7 +1083,7 @@
 						"description": "Búsqueda por id de restaurante",
 						"in": "query",
 						"name": "restaurant",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -895,7 +1092,7 @@
 						"description": "Búsqueda por id o nombre de categoría",
 						"in": "query",
 						"name": "category",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -963,7 +1160,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Product",
+								"$ref": "#/components/schemas/ProductUpdate",
 								"description": "El producto a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
 							}
 						}
@@ -1093,7 +1290,7 @@
 						"description": "Búsqueda por nombre de restaurantes",
 						"in": "query",
 						"name": "name",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -1102,7 +1299,7 @@
 						"description": "Búsqueda por id o nombre de categoría",
 						"in": "query",
 						"name": "category",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -1167,7 +1364,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Restaurant"
+								"$ref": "#/components/schemas/RestaurantUpdate"
 							}
 						}
 					}
@@ -1354,7 +1551,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/User",
+								"$ref": "#/components/schemas/UserUpdate",
 								"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
 							}
 						}

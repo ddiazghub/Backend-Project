@@ -9,6 +9,7 @@ import {
 } from "../models/order.model";
 import { EnumMapping, ResourceController } from "./controller";
 import { HttpError } from "../models/errors";
+import { ObjectId } from "mongoose";
 
 const order = new ResourceController(Order, [["state", "name"]]);
 const state = new ResourceController(OrderState);
@@ -42,7 +43,7 @@ export async function getOrders(
 }
 
 export async function getUnconfirmed(req: Request, res: Response) {
-  await getOrders(req, res, { state: (await States()).created });
+  await getOrders(req, res, { state: (await States()).creado });
 }
 
 export async function getStates(req: Request, res: Response) {
@@ -71,6 +72,8 @@ export async function createOrder(req: Request, res: Response) {
   const invalid = setDifference(prods, valid);
 
   if (invalid.size == 0) {
+    body.state = (await States()).creado as unknown as ObjectId;
+
     await order.createResource(req, res);
   } else {
     const inv = [...invalid];
