@@ -12,3 +12,5 @@ Se necesita tener instalado el compilador de typescript para ejecutar el servido
 ```console
 npm install typescript --save-dev
 ```
+
+Para acceder a la documentación de la API y probar las rutas ingrese al URL: [http://localhost:8000/docs](http://localhost:8000/docs)
