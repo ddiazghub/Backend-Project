@@ -296,8 +296,9 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "project1",
+		"title": "Proyecto 1 Backend",
 		"version": "1.0.0",
+		"description": "API para ofrecer servicios de domicilios de restaurantes.",
 		"license": {
 			"name": "ISC"
 		},

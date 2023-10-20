@@ -1,5 +1,10 @@
 {
   "exec": "ts-node src/index.ts",
-  "watch": ["src"],
+  "watch": [
+    "src",
+    "nodemon.json",
+    "tsconfig.json",
+    "tsoa.json"
+  ],
   "ext": "ts"
 }
