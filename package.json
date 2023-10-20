@@ -2,7 +2,7 @@
   "name": "project1",
   "version": "1.0.0",
   "description": "",
-  "main": "./js/index.js",
+  "main": "js/src/index.js",
   "scripts": {
     "test": "npm test",
     "clean": "rm.exe -rf js",
@@ -11,7 +11,7 @@
     "prestart": "npm run build",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
     "build": "tsc",
-    "start": "node js/index.js",
+    "start": "node js/src/index.js",
     "docs": "tsoa spec"
   },
   "repository": {
