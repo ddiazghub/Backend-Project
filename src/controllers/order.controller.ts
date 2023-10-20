@@ -21,7 +21,7 @@ export async function getOrders(req: Request, res: Response) {
   const startDate = req.query.startDate ? { $gte: req.query.startDate } : empty;
 
   const endDate = req.query.endDate
-    ? { $lt: ceilDate(new Date(req.query.endDate as string)) }
+    ? { $lte: ceilDate(new Date(req.query.endDate as string)) }
     : empty;
 
   const dateRange = startDate === empty && endDate === empty ? empty : { createdAt: { ...startDate, ...endDate } };
