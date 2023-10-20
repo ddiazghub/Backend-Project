@@ -10,19 +10,11 @@ export type ProductCategories = { [k: string]: string };
 
 export const ProductCategory = EnumModel("ProductCategory", EProductCategory);
 
-export interface IBaseProduct extends IResource {
+export interface IProduct extends IResource {
   description: string,
   image: string,
-}
-
-export interface IProduct extends IBaseProduct {
   category: ObjectId,
   restaurant: ObjectId,
-}
-
-export interface IDocProduct extends IDoc<IBaseProduct> {
-  category: string,
-  restaurant: string,
 }
 
 export const Product = Model<IProduct>(

@@ -53,7 +53,7 @@ export interface UserCreation {
  *   "_v": 0
  * }
  */
-export interface DisplayUser {
+export interface User {
   _id: string;
   name: string;
   lastName: string;
@@ -73,7 +73,7 @@ export interface DisplayUser {
  *   "name": "Administrador"
  * }
  */
-export interface DisplayRole {
+export interface Role {
   _id: string,
   name: string,
 }
@@ -88,7 +88,7 @@ export abstract class UserController extends Controller {
    * @summary Get Users
    */
   @Get("")
-  public async getUsers(): Promise<DisplayUser[]> {
+  public async getUsers(): Promise<User[]> {
     return mock();
   }
 
@@ -97,7 +97,7 @@ export abstract class UserController extends Controller {
    * @summary Get Roles
    */
   @Get("roles")
-  public async getRoles(): Promise<DisplayRole[]> {
+  public async getRoles(): Promise<Role[]> {
     return mock();
   }
 
@@ -107,7 +107,7 @@ export abstract class UserController extends Controller {
    * @summary Get User
    */
   @Get("{id}")
-  public async getUser(@Path() id: string): Promise<DisplayUser> {
+  public async getUser(@Path() id: string): Promise<User> {
     return mock();
   }
 
@@ -121,7 +121,7 @@ export abstract class UserController extends Controller {
   public async login(
     @Query() email: string,
     @Query() password: string,
-  ): Promise<DisplayUser> {
+  ): Promise<User> {
     return mock();
   }
 
@@ -131,7 +131,7 @@ export abstract class UserController extends Controller {
    * @summary Create User
    */
   @Post("")
-  public async register(@Body() user: UserCreation): Promise<DisplayUser> {
+  public async register(@Body() user: UserCreation): Promise<User> {
     return mock();
   }
 
@@ -141,7 +141,7 @@ export abstract class UserController extends Controller {
    * @summary Update User
    */
   @Patch("")
-  public async updateUser(@Body() user: DisplayUser): Promise<DisplayUser> {
+  public async updateUser(@Body() user: User): Promise<User> {
     return mock();
   }
 

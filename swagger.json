@@ -6,7 +6,142 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"DisplayRestaurant": {
+			"Product": {
+				"description": "Esquema con el cual el backend retorna un producto.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"category": {
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"name",
+							"_id"
+						],
+						"type": "object"
+					},
+					"restaurant": {
+						"type": "string"
+					},
+					"disabled": {
+						"type": "boolean"
+					},
+					"_v": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"_id",
+					"name",
+					"description",
+					"image",
+					"category",
+					"restaurant",
+					"disabled",
+					"_v"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "6530777d23e50c837de795d4",
+					"name": "Giga Mac",
+					"description": "45000 kCal de viaje garantizado al hospital",
+					"image": "https://th.bing.com/th/id/OIP.JpDTcXVjo5p_CGPXJjcOwgHaE8?pid=ImgDet&rs=1",
+					"category": {
+						"_id": "65305444746510934b074df9",
+						"name": "Hamburguesas"
+					},
+					"restaurant": "65307280beb5043d524138d3",
+					"disabled": false,
+					"_v": 0
+				}
+			},
+			"ProductCategory": {
+				"description": "Esquema con el cual el backend retorna un rol.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductCreation": {
+				"description": "Esquema para crear un producto.",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"restaurant": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"description",
+					"image",
+					"category",
+					"restaurant"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IMessage": {
+				"description": "Respuesta simple con mensaje.",
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"status": 404,
+					"message": "NOT FOUND"
+				}
+			},
+			"Restaurant": {
 				"description": "Esquema con el cual el backend retorna un restaurante.",
 				"properties": {
 					"_id": {
@@ -69,7 +204,7 @@
 					"__v": 0
 				}
 			},
-			"DisplayCategory": {
+			"RestaurantCategory": {
 				"description": "Esquema con el cual el backend retorna una categoris.",
 				"properties": {
 					"_id": {
@@ -122,29 +257,7 @@
 					"deliveryTime": 30
 				}
 			},
-			"IMessage": {
-				"description": "Respuesta simple con mensaje.",
-				"properties": {
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"status",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false,
-				"example": {
-					"status": 404,
-					"message": "NOT FOUND"
-				}
-			},
-			"DisplayUser": {
+			"User": {
 				"description": "Esquema con el cual el backend retorna un usuario.",
 				"properties": {
 					"_id": {
@@ -223,7 +336,7 @@
 					"_v": 0
 				}
 			},
-			"DisplayRole": {
+			"Role": {
 				"description": "Esquema con el cual el backend retorna un rol.",
 				"properties": {
 					"_id": {
@@ -308,6 +421,176 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/products": {
+			"get": {
+				"operationId": "GetProducts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Product"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los usuarios.",
+				"summary": "Get Products",
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Product"
+								}
+							}
+						}
+					}
+				},
+				"description": "Registra un nuevo usuario en la base de datos.",
+				"summary": "Create Product",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "El usuario a registrar",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProductCreation",
+								"description": "El usuario a registrar"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "UpdateProduct",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Product"
+								}
+							}
+						}
+					}
+				},
+				"description": "Edita los datos de un usuario. El usuario es identificado por la propiedad _id.",
+				"summary": "Update Product",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Product",
+								"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ProductCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los roles de usuario.",
+				"summary": "Get Roles",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/products/{id}": {
+			"get": {
+				"operationId": "GetProduct",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Product"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene los datos de un usuario.",
+				"summary": "Get Product",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del usuario",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteProduct",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deshabilita un usuario, este ya no se podrá leer.",
+				"summary": "Delete Product",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del usuario.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/restaurants": {
 			"get": {
 				"operationId": "GetRestaurants",
@@ -318,7 +601,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DisplayRestaurant"
+										"$ref": "#/components/schemas/Restaurant"
 									},
 									"type": "array"
 								}
@@ -358,7 +641,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayRestaurant"
+									"$ref": "#/components/schemas/Restaurant"
 								}
 							}
 						}
@@ -387,7 +670,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayRestaurant"
+									"$ref": "#/components/schemas/Restaurant"
 								}
 							}
 						}
@@ -402,7 +685,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/DisplayRestaurant"
+								"$ref": "#/components/schemas/Restaurant"
 							}
 						}
 					}
@@ -419,7 +702,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DisplayCategory"
+										"$ref": "#/components/schemas/RestaurantCategory"
 									},
 									"type": "array"
 								}
@@ -442,7 +725,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayRestaurant"
+									"$ref": "#/components/schemas/Restaurant"
 								}
 							}
 						}
@@ -503,7 +786,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DisplayUser"
+										"$ref": "#/components/schemas/User"
 									},
 									"type": "array"
 								}
@@ -524,7 +807,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayUser"
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}
@@ -555,7 +838,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayUser"
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}
@@ -571,7 +854,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/DisplayUser",
+								"$ref": "#/components/schemas/User",
 								"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
 							}
 						}
@@ -589,7 +872,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DisplayRole"
+										"$ref": "#/components/schemas/Role"
 									},
 									"type": "array"
 								}
@@ -612,7 +895,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayUser"
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}
@@ -672,7 +955,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DisplayUser"
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}

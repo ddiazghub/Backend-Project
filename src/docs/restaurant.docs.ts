@@ -44,7 +44,7 @@ export interface RestaurantCreation {
  *   "__v": 0
  * }
  */
-export interface DisplayRestaurant {
+export interface Restaurant {
   _id: string;
   name: string;
   administrator: string;
@@ -61,7 +61,7 @@ export interface DisplayRestaurant {
  *   "name": "Comida Rápida"
  * }
  */
-export interface DisplayCategory {
+export interface RestaurantCategory {
   _id: string;
   name: string;
 }
@@ -78,7 +78,7 @@ export abstract class UserController extends Controller {
    * @summary Get Restaurants
    */
   @Get("")
-  public async getRestaurants(@Query() name: string, @Query() category: string): Promise<DisplayRestaurant[]> {
+  public async getRestaurants(@Query() name: string, @Query() category: string): Promise<Restaurant[]> {
     return mock();
   }
 
@@ -87,7 +87,7 @@ export abstract class UserController extends Controller {
    * @summary Get Categories
    */
   @Get("categories")
-  public async getCategories(): Promise<DisplayCategory[]> {
+  public async getCategories(): Promise<RestaurantCategory[]> {
     return mock();
   }
 
@@ -97,7 +97,7 @@ export abstract class UserController extends Controller {
    * @summary Get Restaurant
    */
   @Get("{id}")
-  public async getRestaurant(@Path() id: string): Promise<DisplayRestaurant> {
+  public async getRestaurant(@Path() id: string): Promise<Restaurant> {
     return mock();
   }
 
@@ -107,7 +107,7 @@ export abstract class UserController extends Controller {
    * @summary Create Restaurant
    */
   @Post("")
-  public async createRestaurant(@Body() restaurant: RestaurantCreation): Promise<DisplayRestaurant> {
+  public async createRestaurant(@Body() restaurant: RestaurantCreation): Promise<Restaurant> {
     return mock();
   }
 
@@ -117,7 +117,7 @@ export abstract class UserController extends Controller {
    * @summary Update Restaurant
    */
   @Patch("")
-  public async updateRestaurant(@Body() restaurant: DisplayRestaurant): Promise<DisplayRestaurant> {
+  public async updateRestaurant(@Body() restaurant: Restaurant): Promise<Restaurant> {
     return mock();
   }
 
