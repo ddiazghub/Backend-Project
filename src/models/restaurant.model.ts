@@ -1,4 +1,4 @@
-import Model, { IResource, ResourceSchema, EnumModel } from "./model";
+import Model, { EnumModel, IDoc, IResource, ResourceSchema } from "./model";
 import mongoose, { ObjectId } from "mongoose";
 
 enum ERestaurantCategory {
@@ -6,7 +6,10 @@ enum ERestaurantCategory {
   FastFood = "Comida Rápida",
 }
 
-export const RestaurantCategory = EnumModel("RestaurantCategory", ERestaurantCategory);
+export const RestaurantCategory = EnumModel(
+  "RestaurantCategory",
+  ERestaurantCategory,
+);
 
 export interface IRestaurant extends IResource {
   administrator: ObjectId;

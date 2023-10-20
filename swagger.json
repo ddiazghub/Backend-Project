@@ -1,0 +1,711 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"DisplayRestaurant": {
+				"description": "Esquema con el cual el backend retorna un restaurante.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"administrator": {
+						"type": "string"
+					},
+					"deliveryTime": {
+						"type": "number",
+						"format": "double"
+					},
+					"category": {
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"name",
+							"_id"
+						],
+						"type": "object"
+					},
+					"disabled": {
+						"type": "boolean"
+					},
+					"_v": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"_id",
+					"name",
+					"administrator",
+					"deliveryTime",
+					"category",
+					"disabled",
+					"_v"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "65307280beb5043d524138d3",
+					"name": "McDonalds",
+					"disabled": false,
+					"administrator": "6531618e6025da22956875a6",
+					"category": {
+						"_id": "65305444746510934b074df9",
+						"name": "Comida Rápida"
+					},
+					"deliveryTime": 15,
+					"__v": 0
+				}
+			},
+			"DisplayCategory": {
+				"description": "Esquema con el cual el backend retorna una categoris.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "65305444746510934b074df9",
+					"name": "Comida Rápida"
+				}
+			},
+			"RestaurantCreation": {
+				"description": "Esquema para crear un restaurante.",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"administrator": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"deliveryTime": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"administrator",
+					"category",
+					"deliveryTime"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"name": "McDonalds",
+					"administrator": "6531618e6025da22956875a6",
+					"category": "65305444746510934b074df9",
+					"deliveryTime": 30
+				}
+			},
+			"IMessage": {
+				"description": "Respuesta simple con mensaje.",
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"status": 404,
+					"message": "NOT FOUND"
+				}
+			},
+			"DisplayUser": {
+				"description": "Esquema con el cual el backend retorna un usuario.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "number",
+						"format": "double"
+					},
+					"birthday": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"disabled": {
+						"type": "boolean"
+					},
+					"role": {
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"name",
+							"_id"
+						],
+						"type": "object"
+					},
+					"_v": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"_id",
+					"name",
+					"lastName",
+					"email",
+					"password",
+					"phone",
+					"birthday",
+					"disabled",
+					"role",
+					"_v"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "6531618e6025da22956875a6",
+					"name": "user",
+					"lastName": "admin",
+					"email": "user@email.com",
+					"password": "0123456789ABCDEF",
+					"phone": 10000000000,
+					"birthday": "1995-10-20T04:03:42.164Z",
+					"role": {
+						"_id": "65305445746510934b074e05",
+						"name": "Administrador"
+					},
+					"disabled": false,
+					"_v": 0
+				}
+			},
+			"DisplayRole": {
+				"description": "Esquema con el cual el backend retorna un rol.",
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "65305445746510934b074e05",
+					"name": "Administrador"
+				}
+			},
+			"UserCreation": {
+				"description": "Esquema para crear un usuario.",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "number",
+						"format": "double"
+					},
+					"birthday": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"role": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"lastName",
+					"email",
+					"password",
+					"phone",
+					"birthday",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"name": "pepito",
+					"lastName": "perez",
+					"email": "elpepe@email.com",
+					"password": "0123456789ABCDEF",
+					"phone": 10000000001,
+					"birthday": "2000-10-20T04:03:42.164Z",
+					"role": "65305445746510934b074e05"
+				}
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "project1",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "david"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/restaurants": {
+			"get": {
+				"operationId": "GetRestaurants",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/DisplayRestaurant"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los restaurantes.",
+				"summary": "Get Restaurants",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Búsqueda por nombre de restaurantes",
+						"in": "query",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Búsqueda por id o nombre de categoría",
+						"in": "query",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateRestaurant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayRestaurant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Crea un nuevo restaurante en la base de datos.",
+				"summary": "Create Restaurant",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RestaurantCreation"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "UpdateRestaurant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayRestaurant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Edita los datos de un restaurant. El restaurant es identificado por la propiedad _id.",
+				"summary": "Update Restaurant",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DisplayRestaurant"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/restaurants/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/DisplayCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene totas las categorias de restaurante.",
+				"summary": "Get Categories",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/restaurants/{id}": {
+			"get": {
+				"operationId": "GetRestaurant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayRestaurant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene los datos de un restaurante.",
+				"summary": "Get Restaurant",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del restaurante",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteRestaurant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deshabilita un restaurante, este ya no se podrá leer.",
+				"summary": "Delete Restaurant",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del restaurante.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/DisplayUser"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los usuarios.",
+				"summary": "Get Users",
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Registra un nuevo usuario en la base de datos.",
+				"summary": "Create User",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "El usuario a registrar",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreation",
+								"description": "El usuario a registrar"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "UpdateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Edita los datos de un usuario. El usuario es identificado por la propiedad _id.",
+				"summary": "Update User",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DisplayUser",
+								"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben."
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/roles": {
+			"get": {
+				"operationId": "GetRoles",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/DisplayRole"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene todos los roles de usuario.",
+				"summary": "Get Roles",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obtiene los datos de un usuario.",
+				"summary": "Get User",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del usuario",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deshabilita un usuario, este ya no se podrá leer.",
+				"summary": "Delete User",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id del usuario.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users/login": {
+			"get": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DisplayUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Inicia sesión con los credenciales suministrados.",
+				"summary": "Login",
+				"security": [],
+				"parameters": [
+					{
+						"description": "Email del usuario",
+						"in": "query",
+						"name": "email",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Contraseña del usuario",
+						"in": "query",
+						"name": "password",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

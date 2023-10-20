@@ -1,6 +1,18 @@
 import mongoose, { Schema, SchemaDefinitionProperty } from "mongoose";
 
-interface IEnum {
+/**
+ * Respuesta simple con mensaje.
+ * @example {
+ *   "status": 404,
+ *   "message": "NOT FOUND"
+ * }
+ */
+export interface IMessage {
+  status: number,
+  message: string,
+}
+
+export interface IEnum {
   name: string
 }
 
@@ -33,6 +45,11 @@ export const ResourceSchema = {
 };
 
 export type Enum = { [key: number]: string }
+
+export interface DisplayEnum {
+  _id: string,
+  name: string,
+}
 
 export type IDoc<T> = T & { _id: mongoose.Types.ObjectId };
 export type IDocument<T> = mongoose.Document<unknown, object, T> & IDoc<T>;

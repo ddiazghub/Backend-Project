@@ -1,5 +1,6 @@
 import Model, {
   EnumModel,
+  IDoc,
   IResource,
   ResourceSchema,
 } from "./model";
@@ -20,16 +21,25 @@ export interface IOrderProduct {
   quantity: number;
 }
 
-export interface IOrder {
+export interface IBaseOrder {
   createdAt?: Date;
   updatedAt?: Date;
   deliveryTime: Date;
   orderRating?: number;
+  products: IOrderProduct[];
+  disabled: boolean;
+}
+
+export interface IOrder extends IBaseOrder {
   restaurant: ObjectId;
   user: ObjectId;
   state?: ObjectId;
-  products: IOrderProduct[];
-  disabled: boolean;
+}
+
+export interface IDocOrder extends IDoc<IBaseOrder> {
+  restaurant: string;
+  user: string;
+  state?: string;
 }
 
 const OrderProductSchema = new Schema<IOrderProduct>({

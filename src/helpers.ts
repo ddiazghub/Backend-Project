@@ -18,3 +18,7 @@ export function ceilDate(date: Date): Date {
 
   return date;
 }
+
+export function mock<T>(): T {
+  return {} as unknown as T;
+}

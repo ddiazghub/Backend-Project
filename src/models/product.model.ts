@@ -1,5 +1,5 @@
 import mongoose, { ObjectId } from "mongoose";
-import Model, { EnumModel, ResourceSchema, IResource } from "./model";
+import Model, { EnumModel, ResourceSchema, IResource, IDoc } from "./model";
 
 // Categorías de productos de menu de los restaurantes
 export enum EProductCategory {
@@ -10,11 +10,19 @@ export type ProductCategories = { [k: string]: string };
 
 export const ProductCategory = EnumModel("ProductCategory", EProductCategory);
 
-export interface IProduct extends IResource {
+export interface IBaseProduct extends IResource {
   description: string,
   image: string,
+}
+
+export interface IProduct extends IBaseProduct {
   category: ObjectId,
   restaurant: ObjectId,
+}
+
+export interface IDocProduct extends IDoc<IBaseProduct> {
+  category: string,
+  restaurant: string,
 }
 
 export const Product = Model<IProduct>(

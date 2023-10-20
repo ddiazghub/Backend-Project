@@ -1,5 +1,10 @@
 import mongoose, { ObjectId } from "mongoose";
-import Model, { ResourceSchema, IResource, EnumModel } from "./model";
+import Model, {
+  DisplayEnum,
+  EnumModel,
+  IResource,
+  ResourceSchema,
+} from "./model";
 
 enum EUserRole {
   User = "Usuario",
@@ -10,12 +15,12 @@ enum EUserRole {
 export const UserRole = EnumModel("UserRole", EUserRole);
 
 export interface IUser extends IResource {
-  lastName: string,
-  email: string,
-  password: string,
-  phone: number,
-  birthday: Date,
-  role: ObjectId,
+  lastName: string;
+  email: string;
+  password: string;
+  phone: number;
+  birthday: Date;
+  role: ObjectId;
 }
 
 // Usuario.

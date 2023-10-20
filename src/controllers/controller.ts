@@ -59,7 +59,7 @@ export class ResourceController<T> {
   async getResources(
     req: Request,
     res: Response,
-    filters: object,
+    filters: object = {},
   ) {
     const limit = Number(req.query.limit ?? Number.MAX_SAFE_INTEGER);
 

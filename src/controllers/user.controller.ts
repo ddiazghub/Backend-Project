@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { User, UserRole } from "../models/user.model";
 import { ResourceController } from "./controller";
+
 import errors from "../models/errors";
 
 const user = new ResourceController(User, [["role", "name"]]);
 const role = new ResourceController(UserRole);
 
 export async function getUsers(req: Request, res: Response) {
-  await user.getResources(req, res, {});
+  await user.getResources(req, res);
 }
 
 export async function getRoles(req: Request, res: Response) {
