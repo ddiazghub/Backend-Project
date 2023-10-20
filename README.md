@@ -10,5 +10,5 @@ npm start
 Se necesita tener instalado el compilador de typescript para ejecutar el servidor:
 
 ```console
-npm install -g typescript
+npm install typescript --save-dev
 ```
