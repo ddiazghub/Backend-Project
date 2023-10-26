@@ -1,5 +1,12 @@
 # Proyecto 1 Backend
 
+Se debe definir la variable de entorno CONNECTION_STRING para conectarse a una instancia de MongoDB.
+Cree un archivo llamado .env con la definición de dicha variable de entorno.
+
+```console
+CONNECTION_STRING="mongodb+srv://<user>:<password>@cluster0.lvwps5p.mongodb.net/?retryWrites=true&w=majority"
+```
+
 Para iniciar el servidor ejecute los comandos:
 
 ```console
