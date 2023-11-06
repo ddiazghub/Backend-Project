@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ceilDate, setDifference } from "../helpers";
 import { Product } from "../models/product.model";
 import {
+  IDisplayOrder,
   IOrder,
   IOrderProduct,
   Order,
@@ -10,11 +11,37 @@ import {
 import { EnumMapping, ResourceController } from "./controller";
 import { HttpError } from "../models/errors";
 import { ObjectId } from "mongoose";
+import { IDocument } from "../models/model";
 
-const order = new ResourceController(Order, [["state", "name"]]);
+const order = new ResourceController(Order, [["state", "name"]], orderTotal);
 const state = new ResourceController(OrderState);
 
 const States = EnumMapping(OrderState);
+
+async function orderTotal(order: IDocument<IOrder>): Promise<IDisplayOrder> {
+  const products = await Product.find(
+    { _id: { $in: order.products.map(p => p.product) } },
+    "_id cost",
+  );
+
+  const prods = new Map(products.map(p => [p._id.toString(), p.cost]));
+
+  const total = order.products.reduce(
+    (acc, product) => {
+      const cost = prods.get(product.product.toString());
+
+      return cost ? acc + product.quantity * cost! : 0;
+    },
+    0,
+  );
+
+  const ord = {
+    ...(order as unknown as { _doc: IDocument<IOrder> })._doc,
+    total,
+  };
+
+  return ord;
+}
 
 export async function getOrders(
   req: Request,
@@ -80,7 +107,9 @@ export async function createOrder(req: Request, res: Response) {
 
     const joined = inv.length == 1
       ? ` ${inv[0]} is`
-      : `s ${[inv.slice(0, -1).join(", "), inv[inv.length - 1]].join(" and ")} are`;
+      : `s ${
+        [inv.slice(0, -1).join(", "), inv[inv.length - 1]].join(" and ")
+      } are`;
 
     throw new HttpError(
       400,

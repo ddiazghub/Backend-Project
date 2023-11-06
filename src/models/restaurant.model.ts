@@ -24,6 +24,11 @@ export interface IRestaurant extends IResource {
   deliveryTime: number;
 }
 
+export interface IDisplayRestaurant extends IRestaurant {
+  sales: number;
+  rating: number | null;
+}
+
 // Restaurantes
 export const Restaurant = Model<IRestaurant>(
   "Restaurant",

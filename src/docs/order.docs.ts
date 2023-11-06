@@ -67,10 +67,11 @@ export interface OrderUpdate {
  *   ],
  *   "restaurant": "65307280beb5043d524138d3",
  *   "user": "6531618e6025da22956875a6",
+ *   "total": 100.0,
  *   "state": {
  *     "_id": "65305444746510934b074dff",
  *     "name": "Entregado"
- *   }
+ *   },
  *   "disabled": false,
  *   "_v": 0
  * }
@@ -84,6 +85,7 @@ export interface Order {
   products: { product: string; quantity: number }[];
   disabled: boolean;
   restaurant: string;
+  total: number;
   user: string;
   state: string;
   _v: number;

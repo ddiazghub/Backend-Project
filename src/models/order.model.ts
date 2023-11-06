@@ -28,6 +28,10 @@ export interface IOrder {
   state?: ObjectId;
 }
 
+export interface IDisplayOrder extends IOrder {
+  total: number | null;
+}
+
 const OrderProductSchema = new Schema<IOrderProduct>({
   // El producto que se está pidiendo
   product: {

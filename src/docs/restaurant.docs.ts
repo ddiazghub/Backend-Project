@@ -60,6 +60,8 @@ export interface RestaurantUpdate {
  *     "name": "Comida Rápida"
  *   },
  *   "deliveryTime": 30,
+ *   "sales": 10,
+ *   "rating": 4.7,
  *   "__v": 0
  * }
  */
@@ -69,6 +71,8 @@ export interface Restaurant {
   administrator: string;
   deliveryTime: number;
   category: { _id: string; name: string };
+  sales: number;
+  rating: number | null;
   disabled: boolean;
   _v: number;
 }

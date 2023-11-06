@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { setDifference } from "../helpers";
-import { EnumMap, IEnumModel, IModel } from "../models/model";
-import mongoose from "mongoose";
+import { EnumMap, IDocument, IEnumModel, IModel } from "../models/model";
+import mongoose, { UnpackedIntersection } from "mongoose";
 import errors, { HttpError } from "../models/errors";
 
 export async function seedEnum(collection: IEnumModel) {
@@ -34,22 +34,47 @@ export function EnumMapping(model: IEnumModel) {
   };
 }
 
-export class ResourceController<T> {
+type Transform<T, O> = (doc: IDocument<T>) => Promise<O>;
+type AtEnd<T> = (data: T[]) => T[];
+
+export class ResourceController<T, O> {
   model: IModel<T>;
   populate: { path: string; select: string }[];
+  transform?: Transform<T, O>;
+  atEnd?: AtEnd<O>;
 
   constructor(
     model: IModel<T>,
     populate: [string, string][] = [],
+    transform?: Transform<T, O>,
+    atEnd?: AtEnd<O>,
   ) {
     this.model = model;
     this.populate = ResourceController.populated(populate);
+    this.transform = transform;
+    this.atEnd = atEnd;
+  }
+
+  async transformMany(resources: IDocument<T>[]) {
+    const data = this.transform
+      ? await Promise.all(resources.map(r => this.transform!(r)))
+      : resources;
+
+    return this.atEnd
+      ? this.atEnd!(data as unknown as O[])
+      : data;
+  }
+
+  async transformOne(resource: IDocument<T> | UnpackedIntersection<IDocument<T>, object>) {
+    return this.transform
+      ? await this.transform!(resource as unknown as IDocument<T>)
+      : resource as unknown as O;
   }
 
   async getAll(req: Request, res: Response) {
     const resources = await this.model.find();
 
-    res.status(200).json(resources);
+    res.status(200).json(await this.transformMany(resources));
   }
 
   async getResources(
@@ -63,30 +88,43 @@ export class ResourceController<T> {
       .limit(limit)
       .populate(this.populate);
 
-    res.status(200).json(resources);
+    res.status(200).json(await this.transformMany(resources));
   }
 
-  async getResource(req: Request, res: Response, filters?: { [k: string]: unknown }, err: HttpError = errors.notFound) {
-    if (!filters)
+  async getResource(
+    req: Request,
+    res: Response,
+    filters?: { [k: string]: unknown },
+    err: HttpError = errors.notFound,
+  ) {
+    if (!filters) {
       filters = { _id: req.params.id, disabled: false };
-    else
+    } else {
       filters.disabled = false;
+    }
 
-    const resource = await this.model.findOne(filters as object).populate(this.populate);
+    const resource = await this.model.findOne(filters as object).populate(
+      this.populate,
+    );
 
-    if (resource)
-      res.status(200).json(resource);
-    else
+    if (resource) {
+      res.status(200).json(await this.transformOne(resource));
+    } else {
       throw err;
+    }
   }
 
   async createResource(req: Request, res: Response) {
     const resource = await this.model.create(req.body);
 
-    res.status(200).json(resource);
+    res.status(200).json(await this.transformOne(resource));
   }
 
-  async updateResource(req: Request, res: Response, err: HttpError = errors.notFound) {
+  async updateResource(
+    req: Request,
+    res: Response,
+    err: HttpError = errors.notFound,
+  ) {
     const id = req.body._id;
     delete req.body._id;
     delete req.body.disabled;
@@ -97,15 +135,22 @@ export class ResourceController<T> {
       { new: true },
     ).populate(this.populate);
 
-    if (resource)
-      res.status(200).json(resource);
-    else
+    if (resource) {
+      res.status(200).json(await this.transformOne(resource));
+    } else {
       throw err;
+    }
   }
 
-  async deleteResource(req: Request, res: Response, err: HttpError = errors.notFound) {
+  async deleteResource(
+    req: Request,
+    res: Response,
+    err: HttpError = errors.notFound,
+  ) {
     const filters = { _id: req.params.id, disabled: false };
-    const resource = await this.model.findOneAndUpdate(filters, { disabled: true });
+    const resource = await this.model.findOneAndUpdate(filters, {
+      disabled: true,
+    });
 
     if (resource) {
       res.status(200).json({

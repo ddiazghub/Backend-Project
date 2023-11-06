@@ -53,6 +53,10 @@
 					"restaurant": {
 						"type": "string"
 					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
 					"user": {
 						"type": "string"
 					},
@@ -72,12 +76,35 @@
 					"products",
 					"disabled",
 					"restaurant",
+					"total",
 					"user",
 					"state",
 					"_v"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": false,
+				"example": {
+					"_id": "6531a1b0e9c33a3af568e47e",
+					"createdAt": "2023-10-18T04:03:42.164Z",
+					"updatedAt": "2023-10-20T04:03:42.164Z",
+					"deliveryTime": "2030-10-20T04:03:42.164Z",
+					"orderRating": 4.8,
+					"products": [
+						{
+							"product": "6530777d23e50c837de795d4",
+							"quantity": 3
+						}
+					],
+					"restaurant": "65307280beb5043d524138d3",
+					"user": "6531618e6025da22956875a6",
+					"total": 100,
+					"state": {
+						"_id": "65305444746510934b074dff",
+						"name": "Entregado"
+					},
+					"disabled": false,
+					"_v": 0
+				}
 			},
 			"OrderState": {
 				"description": "Esquema con el cual el backend retorna el estado de un pedido.",
@@ -438,6 +465,15 @@
 						],
 						"type": "object"
 					},
+					"sales": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
 					"disabled": {
 						"type": "boolean"
 					},
@@ -452,6 +488,8 @@
 					"administrator",
 					"deliveryTime",
 					"category",
+					"sales",
+					"rating",
 					"disabled",
 					"_v"
 				],
@@ -467,6 +505,8 @@
 						"name": "Comida Rápida"
 					},
 					"deliveryTime": 30,
+					"sales": 10,
+					"rating": 4.7,
 					"__v": 0
 				}
 			},
