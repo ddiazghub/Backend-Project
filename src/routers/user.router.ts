@@ -10,6 +10,7 @@ import {
   register,
   updateUser,
 } from "../controllers/user.controller";
+import { hashPassword } from "../middleware";
 
 const router = Router();
 
@@ -17,8 +18,8 @@ router.get("/", getUsers);
 router.get("/roles", getRoles);
 router.get("/login", login);
 router.get("/:id", getUser);
-router.post("/", register);
-router.patch("/", updateUser);
+router.post("/", hashPassword, register);
+router.patch("/", hashPassword, updateUser);
 router.delete("/:id", deleteUser);
 
 export default router;

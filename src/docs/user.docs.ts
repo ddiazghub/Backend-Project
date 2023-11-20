@@ -65,7 +65,7 @@ export interface UserUpdate {
  *   "name": "user",
  *   "lastName": "admin",
  *   "email": "user@email.com",
- *   "password": "0123456789ABCDEF",
+ *   "passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$syRur4yCeHRcZe6bp0KfRA$fLli/g+d79zcs2M/MCWLGgj2JRPWb3wjTaUhPORdWxI",
  *   "phone": 10000000000,
  *   "birthday": "1995-10-20T04:03:42.164Z",
  *   "role": {
@@ -81,7 +81,7 @@ export interface User {
   name: string;
   lastName: string;
   email: string;
-  password: string;
+  passwordHash: string;
   phone: number;
   birthday: Date;
   disabled: boolean;

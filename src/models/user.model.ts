@@ -16,7 +16,7 @@ export const UserRole = EnumModel("UserRole", UserRoleValues);
 export interface IUser extends IResource {
   lastName: string;
   email: string;
-  password: string;
+  passwordHash: string;
   phone: number;
   birthday: Date;
   role: ObjectId;
@@ -58,14 +58,9 @@ export const User = Model<IUser>("User", {
     unique: true,
   },
 
-  password: {
+  passwordHash: {
     type: String,
     required: true,
-    minLength: 12,
-    validation: () => {
-      // validacion de caracteres especiales, minusculas, mayusculas, numeros
-      return true;
-    },
   },
 
   birthday: {
