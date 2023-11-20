@@ -1,4 +1,4 @@
-# Proyecto 1 Backend
+# Proyecto Backend
 
 Se debe definir la variable de entorno CONNECTION_STRING para conectarse a una instancia de MongoDB.
 Cree un archivo llamado .env con la definición de dicha variable de entorno.
