@@ -10,7 +10,7 @@ import {
   register,
   updateUser,
 } from "../controllers/user.controller";
-import { hashPassword } from "../middleware";
+import { auth, hashPassword } from "../middleware";
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.get("/roles", getRoles);
 router.get("/login", login);
 router.get("/:id", getUser);
 router.post("/", hashPassword, register);
-router.patch("/", hashPassword, updateUser);
-router.delete("/:id", deleteUser);
+router.patch("/", auth, hashPassword, updateUser);
+router.delete("/:id", auth, deleteUser);
 
 export default router;

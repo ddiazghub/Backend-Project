@@ -1,4 +1,5 @@
-import mongoose, { Schema, SchemaDefinitionProperty } from "mongoose";
+import { Request } from "express";
+import mongoose, { ObjectId, Schema, SchemaDefinitionProperty } from "mongoose";
 
 /**
  * Respuesta simple con mensaje.
@@ -8,12 +9,12 @@ import mongoose, { Schema, SchemaDefinitionProperty } from "mongoose";
  * }
  */
 export interface IMessage {
-  status: number,
-  message: string,
+  status: number;
+  message: string;
 }
 
 export interface IEnum {
-  name: string
+  name: string;
 }
 
 const EnumSchema = {
@@ -26,7 +27,7 @@ const EnumSchema = {
 };
 
 export interface IResource extends IEnum {
-  disabled: boolean
+  disabled: boolean;
 }
 
 export type EnumMap = { [k: string]: string };
@@ -45,8 +46,8 @@ export const ResourceSchema = {
 };
 
 export interface DisplayEnum {
-  _id: string,
-  name: string,
+  _id: string;
+  name: string;
 }
 
 export type IDoc<T> = T & { _id: mongoose.Types.ObjectId };
@@ -64,6 +65,23 @@ export function EnumModel(name: string, values: string[]) {
   return enumModel;
 }
 
-export default function Model<T>(name: string, definition: { [K in keyof T]: SchemaDefinitionProperty<T[K]> }, schemaOptions: object = {}) {
-  return mongoose.model(name, new Schema(definition, schemaOptions)) as unknown as IModel<T>;
+export default function Model<T>(
+  name: string,
+  definition: { [K in keyof T]: SchemaDefinitionProperty<T[K]> },
+  schemaOptions: object = {},
+) {
+  return mongoose.model(
+    name,
+    new Schema(definition, schemaOptions),
+  ) as unknown as IModel<T>;
+}
+
+export function refValidator<T, E>(model: IModel<T>, error: E) {
+  return async (value: ObjectId) => {
+    const doc = await model.findById(value);
+
+    if (!doc) {
+      throw error;
+    }
+  };
 }

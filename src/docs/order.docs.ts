@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 
@@ -170,6 +171,7 @@ export abstract class OrderController extends Controller {
    * @summary Create Order
    */
   @Post("")
+  @Security("token", ["create"])
   public async createOrder(@Body() order: OrderCreation): Promise<Order> {
     return mock();
   }
@@ -180,6 +182,7 @@ export abstract class OrderController extends Controller {
    * @summary Update Order
    */
   @Patch("")
+  @Security("token", ["update"])
   public async updateOrder(@Body() order: OrderUpdate): Promise<Order> {
     return mock();
   }
@@ -190,6 +193,7 @@ export abstract class OrderController extends Controller {
    * @summary Delete Order
    */
   @Delete("{id}")
+  @Security("token", ["delete"])
   public async deleteOrder(@Path() id: string): Promise<IMessage> {
     return mock();
   }

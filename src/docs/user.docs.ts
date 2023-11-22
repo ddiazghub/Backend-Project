@@ -3,11 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Patch,
   Path,
   Post,
   Query,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 
@@ -90,6 +92,32 @@ export interface User {
 }
 
 /**
+ * Esquema con el cual el backend retorna un usuario.
+ * @example {
+ *   "user": {
+ *   "_id": "6531618e6025da22956875a6",
+ *   "name": "user",
+ *   "lastName": "admin",
+ *   "email": "user@email.com",
+ *   "passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$syRur4yCeHRcZe6bp0KfRA$fLli/g+d79zcs2M/MCWLGgj2JRPWb3wjTaUhPORdWxI",
+ *   "phone": 10000000000,
+ *   "birthday": "1995-10-20T04:03:42.164Z",
+ *   "role": {
+ *     "_id": "65305445746510934b074e05",
+ *     "name": "Administrador"
+ *   },
+ *   "disabled": false,
+ *   "_v": 0
+ *   },
+ *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTVhZGUxOGNhMDkxMjUxOGZkNWFmNGYiLCJleHAiOjE3MDA2NzI1MjUxMzcsImlhdCI6MTcwMDY2ODkyNX0.KkfqNqnUV_KjbU6kyP_7i1E65oNa7qjysXEUfBDYdJw"
+ * }
+ */
+export interface UserToken {
+  user: User;
+  token: string;
+}
+
+/**
  * Esquema con el cual el backend retorna un rol.
  * @example {
  *   "_id": "65305445746510934b074e05",
@@ -97,8 +125,8 @@ export interface User {
  * }
  */
 export interface Role {
-  _id: string,
-  name: string,
+  _id: string;
+  name: string;
 }
 
 /**
@@ -145,7 +173,7 @@ export abstract class UserController extends Controller {
   public async login(
     @Query() email: string,
     @Query() password: string,
-  ): Promise<User> {
+  ): Promise<UserToken> {
     return mock();
   }
 
@@ -165,6 +193,7 @@ export abstract class UserController extends Controller {
    * @summary Update User
    */
   @Patch("")
+  @Security("token", ["update"])
   public async updateUser(@Body() user: UserUpdate): Promise<User> {
     return mock();
   }
@@ -175,6 +204,7 @@ export abstract class UserController extends Controller {
    * @summary Delete User
    */
   @Delete("{id}")
+  @Security("token", ["delete"])
   public async deleteUser(@Path() id: string): Promise<IMessage> {
     return mock();
   }

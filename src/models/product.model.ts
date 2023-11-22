@@ -1,5 +1,6 @@
 import mongoose, { ObjectId } from "mongoose";
-import Model, { EnumModel, IResource, ResourceSchema } from "./model";
+import Model, { EnumModel, IResource, ResourceSchema, refValidator } from "./model";
+import { Restaurant } from "./restaurant.model";
 
 // Categorías de productos de menu de los restaurantes
 export const ProductCategoryValues = [
@@ -25,7 +26,10 @@ export const ProductCategoryValues = [
 
 export type ProductCategories = { [k: string]: string };
 
-export const ProductCategory = EnumModel("ProductCategory", ProductCategoryValues);
+export const ProductCategory = EnumModel(
+  "ProductCategory",
+  ProductCategoryValues,
+);
 
 export interface IProduct extends IResource {
   description: string;
@@ -65,6 +69,10 @@ export const Product = Model<IProduct>(
       type: mongoose.Types.ObjectId, // Referencia a ProductCategory
       ref: "ProductCategory",
       required: true,
+      validate: refValidator(
+        ProductCategory,
+        "The product's category does not exist",
+      ),
     },
 
     // Restaurante al cual pertenece el producto
@@ -72,6 +80,10 @@ export const Product = Model<IProduct>(
       type: mongoose.Types.ObjectId, // Referencia a RestaurantSchema
       ref: "Restaurant",
       required: true,
+      validate: refValidator(
+        Restaurant,
+        "The restaurant does not exist",
+      ),
     },
 
     cost: {

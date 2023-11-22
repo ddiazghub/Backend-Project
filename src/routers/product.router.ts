@@ -9,14 +9,15 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/product.controller";
+import { auth } from "../middleware";
 
 const router = Router();
 
 router.get("/", getProducts);
 router.get("/categories", getCategories);
 router.get("/:id", getProduct);
-router.post("/", createProduct);
-router.patch("/", updateProduct);
-router.delete("/:id", deleteProduct);
+router.post("/", auth, createProduct);
+router.patch("/", auth, updateProduct);
+router.delete("/:id", auth, deleteProduct);
 
 export default router;

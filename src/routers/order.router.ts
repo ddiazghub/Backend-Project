@@ -10,6 +10,7 @@ import {
   getUnconfirmed,
   updateOrder,
 } from "../controllers/order.controller";
+import { auth } from "../middleware";
 
 const router = Router();
 
@@ -17,8 +18,8 @@ router.get("/", getOrders);
 router.get("/states", getStates);
 router.get("/unconfirmed", getUnconfirmed);
 router.get("/:id", getOrder);
-router.post("/", createOrder);
-router.patch("/", updateOrder);
-router.delete("/:id", deleteOrder);
+router.post("/", auth, createOrder);
+router.patch("/", auth, updateOrder);
+router.delete("/:id", auth, deleteOrder);
 
 export default router;

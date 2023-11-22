@@ -1,5 +1,7 @@
-import Model, { EnumModel } from "./model";
+import Model, { EnumModel, refValidator } from "./model";
 import mongoose, { ObjectId, Schema } from "mongoose";
+import { Restaurant } from "./restaurant.model";
+import { User } from "./user.model";
 
 export const OrderStateValues = [
   "Creado",
@@ -74,6 +76,10 @@ export const Order = Model<IOrder>("Order", {
     ref: "Restaurant",
     required: true,
     immutable: true,
+    validate: refValidator(
+      Restaurant,
+      "The restaurant does not exist",
+    ),
   },
 
   // El usuario que realizó el pedido
@@ -81,12 +87,20 @@ export const Order = Model<IOrder>("Order", {
     type: mongoose.Types.ObjectId,
     ref: "User",
     required: true,
+    validate: refValidator(
+      User,
+      "The user does not exist",
+    ),
   },
 
   // El estado del pedido
   state: {
     type: mongoose.Types.ObjectId,
     ref: "OrderState",
+    validate: refValidator(
+      OrderState,
+      "The order's state does not exist",
+    ),
   },
 
   products: {

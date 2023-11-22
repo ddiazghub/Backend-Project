@@ -5,7 +5,20 @@
     "outputDirectory": ".",
     "specVersion": 3,
     "name": "Proyecto 1 Backend",
-    "description": "API para ofrecer servicios de domicilios de restaurantes."
+    "description": "API para ofrecer servicios de domicilios de restaurantes.",
+    "securityDefinitions": {
+      "token": {
+        "type": "http",
+        "description": "JWT token based security",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "scopes": {
+          "create": "Create a resource",
+          "update": "Update a resource",
+          "delete": "Delete a resource"
+        }
+      }
+    }
   },
   "controllerPathGlobs": ["src/**/*.docs.ts"]
 }

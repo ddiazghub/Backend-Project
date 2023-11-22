@@ -2,6 +2,7 @@ import mongoose, { ObjectId } from "mongoose";
 import Model, {
   EnumModel,
   IResource,
+  refValidator,
   ResourceSchema,
 } from "./model";
 
@@ -37,6 +38,10 @@ export const User = Model<IUser>("User", {
     type: mongoose.Types.ObjectId, // id del rol en el schema de UserRolaSchema
     ref: "UserRole",
     required: true,
+    validate: refValidator(
+      UserRole,
+      "The user's role does not exist",
+    ),
   },
 
   // @ts-expect-error

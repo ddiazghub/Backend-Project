@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 
@@ -142,6 +143,7 @@ export abstract class ProductController extends Controller {
    * @summary Create Product
    */
   @Post("")
+  @Security("token", ["create"])
   public async createProduct(
     @Body() product: ProductCreation,
   ): Promise<Product> {
@@ -154,6 +156,7 @@ export abstract class ProductController extends Controller {
    * @summary Update Product
    */
   @Patch("")
+  @Security("token", ["update"])
   public async updateProduct(@Body() product: ProductUpdate): Promise<Product> {
     return mock();
   }
@@ -164,6 +167,7 @@ export abstract class ProductController extends Controller {
    * @summary Delete Product
    */
   @Delete("{id}")
+  @Security("token", ["delete"])
   public async deleteProduct(@Path() id: string): Promise<IMessage> {
     return mock();
   }

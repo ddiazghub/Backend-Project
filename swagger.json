@@ -696,6 +696,41 @@
 					"name": "Administrador"
 				}
 			},
+			"UserToken": {
+				"description": "Esquema con el cual el backend retorna un usuario.",
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"user": {
+						"_id": "6531618e6025da22956875a6",
+						"name": "user",
+						"lastName": "admin",
+						"email": "user@email.com",
+						"passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$syRur4yCeHRcZe6bp0KfRA$fLli/g+d79zcs2M/MCWLGgj2JRPWb3wjTaUhPORdWxI",
+						"phone": 10000000000,
+						"birthday": "1995-10-20T04:03:42.164Z",
+						"role": {
+							"_id": "65305445746510934b074e05",
+							"name": "Administrador"
+						},
+						"disabled": false,
+						"_v": 0
+					},
+					"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTVhZGUxOGNhMDkxMjUxOGZkNWFmNGYiLCJleHAiOjE3MDA2NzI1MjUxMzcsImlhdCI6MTcwMDY2ODkyNX0.KkfqNqnUV_KjbU6kyP_7i1E65oNa7qjysXEUfBDYdJw"
+				}
+			},
 			"UserCreation": {
 				"description": "Esquema para crear un usuario.",
 				"properties": {
@@ -786,7 +821,19 @@
 				}
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"token": {
+				"type": "http",
+				"description": "JWT token based security",
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"scopes": {
+					"create": "Create a resource",
+					"update": "Update a resource",
+					"delete": "Delete a resource"
+				}
+			}
+		}
 	},
 	"info": {
 		"title": "Proyecto 1 Backend",
@@ -885,7 +932,13 @@
 				"tags": [
 					"Orders"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"create"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Datos del nuevo pedido a crear",
@@ -919,7 +972,13 @@
 				"tags": [
 					"Orders"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"update"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "El pedido a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
@@ -1080,7 +1139,13 @@
 				"tags": [
 					"Orders"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"delete"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Id del pedido.",
@@ -1158,7 +1223,13 @@
 				"tags": [
 					"Products"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"create"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Datos del nuevo producto a crear",
@@ -1192,7 +1263,13 @@
 				"tags": [
 					"Products"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"update"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "El producto a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
@@ -1287,7 +1364,13 @@
 				"tags": [
 					"Products"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"delete"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Id del producto.",
@@ -1365,7 +1448,13 @@
 				"tags": [
 					"Restaurants"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"create"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1397,7 +1486,13 @@
 				"tags": [
 					"Restaurants"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"delete"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1490,7 +1585,13 @@
 				"tags": [
 					"Restaurants"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"delete"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Id del restaurante.",
@@ -1583,7 +1684,13 @@
 				"tags": [
 					"Users"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"update"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "El usuario a editar. Todos los campos que estén definidos en este objeto se sobreescriben.",
@@ -1678,7 +1785,13 @@
 				"tags": [
 					"Users"
 				],
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"delete"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Id del usuario.",
@@ -1701,7 +1814,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/UserToken"
 								}
 							}
 						}

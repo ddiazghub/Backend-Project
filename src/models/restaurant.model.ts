@@ -1,4 +1,10 @@
-import Model, { EnumModel, IDoc, IResource, ResourceSchema } from "./model";
+import Model, {
+  EnumModel,
+  IDoc,
+  IResource,
+  refValidator,
+  ResourceSchema,
+} from "./model";
 import mongoose, { ObjectId } from "mongoose";
 
 export const RestaurantCategoryValues = [
@@ -16,7 +22,10 @@ export const RestaurantCategoryValues = [
   "Comida Rapida",
 ];
 
-export const RestaurantCategory = EnumModel("RestaurantCategory", RestaurantCategoryValues);
+export const RestaurantCategory = EnumModel(
+  "RestaurantCategory",
+  RestaurantCategoryValues,
+);
 
 export interface IRestaurant extends IResource {
   administrator: ObjectId;
@@ -46,6 +55,10 @@ export const Restaurant = Model<IRestaurant>(
       type: mongoose.Types.ObjectId,
       ref: "RestaurantCategory",
       required: true,
+      validate: refValidator(
+        RestaurantCategory,
+        "The restaurant's category does not exist",
+      ),
     },
 
     // Tiempo de entrega esperado del restaurante

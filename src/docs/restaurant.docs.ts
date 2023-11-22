@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 
@@ -134,6 +135,7 @@ export abstract class UserController extends Controller {
    * @summary Create Restaurant
    */
   @Post("")
+  @Security("token", ["create"])
   public async createRestaurant(
     @Body() restaurant: RestaurantCreation,
   ): Promise<Restaurant> {
@@ -146,6 +148,7 @@ export abstract class UserController extends Controller {
    * @summary Update Restaurant
    */
   @Patch("")
+  @Security("token", ["delete"])
   public async updateRestaurant(
     @Body() restaurant: RestaurantUpdate,
   ): Promise<Restaurant> {
@@ -158,6 +161,7 @@ export abstract class UserController extends Controller {
    * @summary Delete Restaurant
    */
   @Delete("{id}")
+  @Security("token", ["delete"])
   public async deleteRestaurant(@Path() id: string): Promise<IMessage> {
     return mock();
   }

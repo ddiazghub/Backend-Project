@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
-import { User, UserRole } from "../models/user.model";
+import { IUser, User, UserRole } from "../models/user.model";
 import { ResourceController } from "./controller";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
 
 import errors from "../models/errors";
+import { IDoc } from "../models/model";
+import { Token, UserToken } from "../models/auth";
+import config from "../config";
 
+const MS_IN_HOUR = 3600 * 1000;
 const user = new ResourceController(User, [["role", "name"]]);
 const role = new ResourceController(UserRole);
 
@@ -16,16 +21,29 @@ export async function getRoles(req: Request, res: Response) {
   await role.getAll(req, res);
 }
 
+function generateToken(user: IDoc<IUser>): UserToken {
+  const payload: Token = {
+    sub: user._id.toString(),
+    exp: Date.now() + MS_IN_HOUR,
+  };
+
+  const token = jwt.sign(payload, config.SECRET);
+
+  return { user, token };
+}
+
 export async function login(req: Request, res: Response) {
   const filters = { email: req.query.email, disabled: false };
+  const password = req.query.password as string;
 
   const user = await User.findOne(filters as object).populate({
     path: "role",
     select: "name",
   });
 
-  if (user && await argon2.verify(user.passwordHash, req.query.password as string)) {
-    res.status(200).json(user);
+  if (user && await argon2.verify(user.passwordHash, password)) {
+    const token = generateToken(user);
+    res.status(200).json(token);
   } else {
     throw errors.loginFailed;
   }
