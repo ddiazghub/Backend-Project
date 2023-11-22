@@ -23,14 +23,12 @@ import { mock } from "../helpers";
  *     { "product": "6530777d23e50c837de795d4", "quantity": 3 }
  *   ],
  *   "restaurant": "65307280beb5043d524138d3",
- *   "user": "6531618e6025da22956875a6"
  * }
  */
 export interface OrderCreation {
   deliveryTime: Date;
   products: { product: string; quantity: number }[];
   restaurant: string;
-  user: string;
 }
 
 /**

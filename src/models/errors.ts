@@ -15,5 +15,6 @@ export class HttpError extends Error {
 export default {
   notFound: new HttpError(404, "Not Found"),
   unauthorized: new HttpError(401, "Unauthorized"),
+  forbidden: new HttpError(401, "Forbidden. The user is not allowed to access the resource"),
   loginFailed: new HttpError(401, "Login failed. Incorrect username or password"),
 };

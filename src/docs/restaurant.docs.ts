@@ -19,14 +19,12 @@ import { mock } from "../helpers";
  * Esquema para crear un restaurante.
  * @example {
  *   "name": "McDonalds",
- *   "administrator": "6531618e6025da22956875a6",
  *   "category": "65305444746510934b074df9",
  *   "deliveryTime": 30
  * }
  */
 export interface RestaurantCreation {
   name: string;
-  administrator: string;
   category: string;
   deliveryTime: number;
 }
@@ -148,7 +146,7 @@ export abstract class UserController extends Controller {
    * @summary Update Restaurant
    */
   @Patch("")
-  @Security("token", ["delete"])
+  @Security("token", ["update"])
   public async updateRestaurant(
     @Body() restaurant: RestaurantUpdate,
   ): Promise<Restaurant> {

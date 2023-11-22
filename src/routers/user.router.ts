@@ -10,16 +10,18 @@ import {
   register,
   updateUser,
 } from "../controllers/user.controller";
-import { auth, hashPassword } from "../middleware";
+import { authByKey, authenticate, hashPassword } from "../middleware";
+import { User } from "../models/user.model";
 
 const router = Router();
+const authorize = authByKey(User, "_id");
 
 router.get("/", getUsers);
 router.get("/roles", getRoles);
 router.get("/login", login);
 router.get("/:id", getUser);
 router.post("/", hashPassword, register);
-router.patch("/", auth, hashPassword, updateUser);
-router.delete("/:id", auth, deleteUser);
+router.patch("/", authenticate, authorize.update, hashPassword, updateUser);
+router.delete("/:id", authenticate, authorize.delete, deleteUser);
 
 export default router;

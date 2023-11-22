@@ -9,15 +9,17 @@ import {
   getRestaurants,
   updateRestaurant,
 } from "../controllers/restaurant.controller";
-import { auth } from "../middleware";
+import { authByKey, authenticate, isAdmin } from "../middleware";
+import { Restaurant } from "../models/restaurant.model";
 
 const router = Router();
+const authorize = authByKey(Restaurant, "administrator");
 
 router.get("/", getRestaurants);
 router.get("/categories", getCategories);
 router.get("/:id", getRestaurant);
-router.post("/", auth, createRestaurant);
-router.patch("/", auth, updateRestaurant);
-router.delete("/:id", auth, deleteRestaurant);
+router.post("/", authenticate, isAdmin, createRestaurant);
+router.patch("/", authenticate, authorize.update, updateRestaurant);
+router.delete("/:id", authenticate, authorize.delete, deleteRestaurant);
 
 export default router;

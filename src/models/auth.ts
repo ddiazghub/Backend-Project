@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { IDoc } from "./model";
+import { IDoc, IResource } from "./model";
 import { IUser } from "./user.model";
 
 export interface Token {
@@ -7,9 +7,21 @@ export interface Token {
   exp: number;
 }
 
-export type AuthRequest = Request & { token: Token; user: IDoc<IUser> };
+export interface IAuthUser extends IResource {
+  lastName: string;
+  email: string;
+  passwordHash: string;
+  phone: number;
+  birthday: Date;
+  admin: boolean;
+}
 
-export interface UserToken {
+export interface AuthRequest extends Request {
+  token: Token;
+  user: IDoc<IAuthUser>;
+}
+
+export interface DisplayUserToken {
   user: IDoc<IUser>;
   token: string;
 }

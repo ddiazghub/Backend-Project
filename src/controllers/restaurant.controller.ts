@@ -5,9 +5,10 @@ import {
   Restaurant,
   RestaurantCategory,
 } from "../models/restaurant.model";
-import { EnumMapping, ResourceController } from "./controller";
+import { ResourceController, ReverseEnumMapping } from "./controller";
 import { IDocument } from "../models/model";
 import { Order } from "../models/order.model";
+import { AuthRequest } from "../models/auth";
 
 const restaurant = new ResourceController(
   Restaurant,
@@ -18,7 +19,7 @@ const restaurant = new ResourceController(
 
 const category = new ResourceController(RestaurantCategory);
 
-const Categories = EnumMapping(RestaurantCategory);
+const Categories = ReverseEnumMapping(RestaurantCategory);
 
 async function salesRating(
   restaurant: IDocument<IRestaurant>,
@@ -69,6 +70,9 @@ export async function getRestaurant(req: Request, res: Response) {
 }
 
 export async function createRestaurant(req: Request, res: Response) {
+  const request = req as AuthRequest;
+  req.body.administrator = request.user._id;
+
   await restaurant.createResource(req, res);
 }
 

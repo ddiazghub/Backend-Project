@@ -8,23 +8,24 @@ import {
   Order,
   OrderState,
 } from "../models/order.model";
-import { EnumMapping, ResourceController } from "./controller";
+import { ResourceController, ReverseEnumMapping } from "./controller";
 import { HttpError } from "../models/errors";
 import { ObjectId } from "mongoose";
 import { IDocument } from "../models/model";
+import { AuthRequest } from "../models/auth";
 
 const order = new ResourceController(Order, [["state", "name"]], orderTotal);
 const state = new ResourceController(OrderState);
 
-const States = EnumMapping(OrderState);
+const States = ReverseEnumMapping(OrderState);
 
 async function orderTotal(order: IDocument<IOrder>): Promise<IDisplayOrder> {
   const products = await Product.find(
-    { _id: { $in: order.products.map(p => p.product) } },
+    { _id: { $in: order.products.map((p) => p.product) } },
     "_id cost",
   );
 
-  const prods = new Map(products.map(p => [p._id.toString(), p.cost]));
+  const prods = new Map(products.map((p) => [p._id.toString(), p.cost]));
 
   const total = order.products.reduce(
     (acc, product) => {
@@ -82,7 +83,10 @@ export async function getOrder(req: Request, res: Response) {
 }
 
 export async function createOrder(req: Request, res: Response) {
+  const request = req as AuthRequest;
   const body = req.body as IOrder;
+
+  body.user = request.user._id as unknown as ObjectId;
 
   const products = (body.products as IOrderProduct[]).map((product) =>
     product.product.toString()

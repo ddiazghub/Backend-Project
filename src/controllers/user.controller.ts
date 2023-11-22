@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 import errors from "../models/errors";
 import { IDoc } from "../models/model";
-import { Token, UserToken } from "../models/auth";
+import { AuthRequest, DisplayUserToken, Token } from "../models/auth";
 import config from "../config";
 
 const MS_IN_HOUR = 3600 * 1000;
@@ -21,7 +21,7 @@ export async function getRoles(req: Request, res: Response) {
   await role.getAll(req, res);
 }
 
-function generateToken(user: IDoc<IUser>): UserToken {
+function generateToken(user: IDoc<IUser>): DisplayUserToken {
   const payload: Token = {
     sub: user._id.toString(),
     exp: Date.now() + MS_IN_HOUR,

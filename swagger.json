@@ -155,30 +155,15 @@
 					},
 					"restaurant": {
 						"type": "string"
-					},
-					"user": {
-						"type": "string"
 					}
 				},
 				"required": [
 					"deliveryTime",
 					"products",
-					"restaurant",
-					"user"
+					"restaurant"
 				],
 				"type": "object",
-				"additionalProperties": false,
-				"example": {
-					"deliveryTime": "2030-10-20T04:03:42.164Z",
-					"products": [
-						{
-							"product": "6530777d23e50c837de795d4",
-							"quantity": 3
-						}
-					],
-					"restaurant": "65307280beb5043d524138d3",
-					"user": "6531618e6025da22956875a6"
-				}
+				"additionalProperties": false
 			},
 			"OrderUpdate": {
 				"description": "Esquema para editar un pedido.",
@@ -537,9 +522,6 @@
 					"name": {
 						"type": "string"
 					},
-					"administrator": {
-						"type": "string"
-					},
 					"category": {
 						"type": "string"
 					},
@@ -550,7 +532,6 @@
 				},
 				"required": [
 					"name",
-					"administrator",
 					"category",
 					"deliveryTime"
 				],
@@ -558,7 +539,6 @@
 				"additionalProperties": false,
 				"example": {
 					"name": "McDonalds",
-					"administrator": "6531618e6025da22956875a6",
 					"category": "65305444746510934b074df9",
 					"deliveryTime": 30
 				}
@@ -1489,7 +1469,7 @@
 				"security": [
 					{
 						"token": [
-							"delete"
+							"update"
 						]
 					}
 				],

@@ -1,6 +1,5 @@
 import Model, {
   EnumModel,
-  IDoc,
   IResource,
   refValidator,
   ResourceSchema,

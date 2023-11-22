@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Product, ProductCategory } from "../models/product.model";
-import { EnumMapping, ResourceController } from "./controller";
+import { ReverseEnumMapping, ResourceController } from "./controller";
 
 const product = new ResourceController(Product, [["category", "name"]]);
 const category = new ResourceController(ProductCategory);
 
-const Categories = EnumMapping(ProductCategory);
+const Categories = ReverseEnumMapping(ProductCategory);
 
 export async function getProducts(req: Request, res: Response) {
   const cats = await Categories();

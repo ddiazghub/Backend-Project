@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { setDifference } from "../helpers";
-import { EnumMap, IDocument, IEnumModel, IModel } from "../models/model";
+import { EnumMap, IDoc, IDocument, IEnumModel, IModel } from "../models/model";
 import mongoose, { UnpackedIntersection } from "mongoose";
 import errors, { HttpError } from "../models/errors";
 
@@ -16,7 +16,7 @@ export async function seedEnum(collection: IEnumModel) {
   await collection.create([...toAdd].map((record) => ({ name: record })));
 }
 
-export function EnumMapping(model: IEnumModel) {
+export function ReverseEnumMapping(model: IEnumModel) {
   let mapping: EnumMap | undefined;
 
   return async () => {
