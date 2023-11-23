@@ -22,7 +22,7 @@ import { mock } from "../helpers";
  *   "products": [
  *     { "product": "6530777d23e50c837de795d4", "quantity": 3 }
  *   ],
- *   "restaurant": "65307280beb5043d524138d3",
+ *   "restaurant": "65307280beb5043d524138d3"
  * }
  */
 export interface OrderCreation {

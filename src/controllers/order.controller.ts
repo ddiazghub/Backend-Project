@@ -86,7 +86,7 @@ export async function createOrder(req: Request, res: Response) {
   const request = req as AuthRequest;
   const body = req.body as IOrder;
 
-  body.user = request.user._id as unknown as ObjectId;
+  body.user = request.token.sub as unknown as ObjectId;
 
   const products = (body.products as IOrderProduct[]).map((product) =>
     product.product.toString()

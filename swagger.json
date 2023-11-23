@@ -163,7 +163,17 @@
 					"restaurant"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"additionalProperties": false,
+				"example": {
+					"deliveryTime": "2030-10-20T04:03:42.164Z",
+					"products": [
+						{
+							"product": "6530777d23e50c837de795d4",
+							"quantity": 3
+						}
+					],
+					"restaurant": "65307280beb5043d524138d3"
+				}
 			},
 			"OrderUpdate": {
 				"description": "Esquema para editar un pedido.",
@@ -591,9 +601,6 @@
 					"email": {
 						"type": "string"
 					},
-					"passwordHash": {
-						"type": "string"
-					},
 					"phone": {
 						"type": "number",
 						"format": "double"
@@ -630,7 +637,6 @@
 					"name",
 					"lastName",
 					"email",
-					"passwordHash",
 					"phone",
 					"birthday",
 					"disabled",
@@ -644,7 +650,6 @@
 					"name": "user",
 					"lastName": "admin",
 					"email": "user@email.com",
-					"passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$syRur4yCeHRcZe6bp0KfRA$fLli/g+d79zcs2M/MCWLGgj2JRPWb3wjTaUhPORdWxI",
 					"phone": 10000000000,
 					"birthday": "1995-10-20T04:03:42.164Z",
 					"role": {
@@ -698,7 +703,6 @@
 						"name": "user",
 						"lastName": "admin",
 						"email": "user@email.com",
-						"passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$syRur4yCeHRcZe6bp0KfRA$fLli/g+d79zcs2M/MCWLGgj2JRPWb3wjTaUhPORdWxI",
 						"phone": 10000000000,
 						"birthday": "1995-10-20T04:03:42.164Z",
 						"role": {

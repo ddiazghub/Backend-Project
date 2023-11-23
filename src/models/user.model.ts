@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import Model, {
   EnumModel,
   IResource,
@@ -14,6 +14,12 @@ const UserRoleValues = [
 // Roles de usuario. Usuario, Administrador, etc...
 export const UserRole = EnumModel("UserRole", UserRoleValues);
 
+export interface Otp {
+  secret: string;
+  uri: string;
+  qr: string;
+}
+
 export interface IUser extends IResource {
   lastName: string;
   email: string;
@@ -21,7 +27,23 @@ export interface IUser extends IResource {
   phone: number;
   birthday: Date;
   role: ObjectId;
+  otp?: Otp;
 }
+
+const OtpSchema = new Schema({
+  secret: {
+    type: String,
+    required: true,
+  },
+  uri: {
+    type: String,
+    required: true,
+  },
+  qr: {
+    type: String,
+    required: true,
+  },
+});
 
 // Usuario.
 export const User = Model<IUser>("User", {
@@ -73,4 +95,6 @@ export const User = Model<IUser>("User", {
     required: true,
     immutable: true,
   },
+
+  otp: OtpSchema,
 });

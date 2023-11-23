@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { setDifference } from "../helpers";
 import { EnumMap, IDoc, IDocument, IEnumModel, IModel } from "../models/model";
 import mongoose, { UnpackedIntersection } from "mongoose";
-import errors, { HttpError } from "../models/errors";
+import { HttpError, NotFound } from "../models/errors";
 
 export async function seedEnum(collection: IEnumModel) {
   const documents = await collection.find();
@@ -95,7 +95,7 @@ export class ResourceController<T, O> {
     req: Request,
     res: Response,
     filters?: { [k: string]: unknown },
-    err: HttpError = errors.notFound,
+    err: HttpError = new NotFound(),
   ) {
     if (!filters) {
       filters = { _id: req.params.id, disabled: false };
@@ -123,7 +123,7 @@ export class ResourceController<T, O> {
   async updateResource(
     req: Request,
     res: Response,
-    err: HttpError = errors.notFound,
+    err: HttpError = new NotFound(),
   ) {
     const id = req.body._id;
     delete req.body._id;
@@ -145,7 +145,7 @@ export class ResourceController<T, O> {
   async deleteResource(
     req: Request,
     res: Response,
-    err: HttpError = errors.notFound,
+    err: HttpError = new NotFound(),
   ) {
     const filters = { _id: req.params.id, disabled: false };
     const resource = await this.model.findOneAndUpdate(filters, {

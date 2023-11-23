@@ -1,6 +1,6 @@
 export class HttpError extends Error {
   status: number;
-  
+
   constructor(status: number, message: string) {
     super(message);
     this.status = status;
@@ -12,9 +12,32 @@ export class HttpError extends Error {
   }
 }
 
-export default {
-  notFound: new HttpError(404, "Not Found"),
-  unauthorized: new HttpError(401, "Unauthorized"),
-  forbidden: new HttpError(401, "Forbidden. The user is not allowed to access the resource"),
-  loginFailed: new HttpError(401, "Login failed. Incorrect username or password"),
-};
+export class NotFound extends HttpError {
+  constructor() {
+    super(404, "Not Found");
+  }
+}
+
+export class Unauthorized extends HttpError {
+  constructor() {
+    super(401, "Unauthorized");
+  }
+}
+
+export class Forbidden extends HttpError {
+  constructor() {
+    super(
+      403,
+      "Forbidden. The user is not authorized to access the resource",
+    );
+  }
+}
+
+export class LoginFailed extends HttpError {
+  constructor() {
+    super(
+      401,
+      "Login failed. Incorrect username or password",
+    );
+  }
+}

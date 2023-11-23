@@ -3,11 +3,10 @@ import argon2 from "argon2";
 import { AuthRequest, Token } from "./models/auth";
 import jwt from "jsonwebtoken";
 import config from "./config";
-import errors from "./models/errors";
-import { User } from "./models/user.model";
 import { IDoc, IModel } from "./models/model";
 import { ObjectId } from "mongoose";
 import { IRestaurant, Restaurant } from "./models/restaurant.model";
+import { NotFound, Unauthorized } from "./models/errors";
 
 export async function hashPassword(
   req: Request,
@@ -34,7 +33,7 @@ export async function authenticate(
   const auth = req.header("Authorization");
 
   if (!auth) {
-    throw errors.unauthorized;
+    throw new Unauthorized();
   }
 
   const authParts = auth.split(" ");
@@ -44,23 +43,6 @@ export async function authenticate(
     config.SECRET,
   ) as Token;
 
-  const doc = await User.findById(request.token.sub).populate({
-    path: "role",
-    select: "name",
-  });
-
-  if (!doc) {
-    throw errors.unauthorized;
-  }
-
-  const userRole = doc.role as unknown as { name: string };
-
-  const { role, ...user } = {
-    ...doc,
-    admin: userRole.name.toLowerCase().startsWith("admin"),
-  };
-
-  request.user = user;
   next();
 }
 
@@ -71,8 +53,8 @@ export async function isAdmin(
 ) {
   const request = req as AuthRequest;
 
-  if (!request.user.admin) {
-    throw errors.unauthorized;
+  if (!request.token.admin) {
+    throw new Unauthorized();
   }
 
   next();
@@ -80,7 +62,7 @@ export async function isAdmin(
 
 async function restaurantAdmin<T extends { restaurant: ObjectId }>(
   model: IModel<T>,
-  userId: object,
+  userId: string,
   resourceId: string,
   next: NextFunction,
 ) {
@@ -90,23 +72,25 @@ async function restaurantAdmin<T extends { restaurant: ObjectId }>(
   }) as T & { restaurant: IRestaurant };
 
   if (!doc) {
-    throw errors.notFound;
+    throw new NotFound();
   }
 
   if (String(doc.restaurant.administrator) != String(userId)) {
-    throw errors.unauthorized;
+    throw new Unauthorized();
   }
 
   next();
 }
 
-export function isRestaurantAdmin<T extends { restaurant: ObjectId }>(model: IModel<T>) {
+export function isRestaurantAdmin<T extends { restaurant: ObjectId }>(
+  model: IModel<T>,
+) {
   return {
     create: async (req: Request, res: Response, next: NextFunction) => {
       return authorizeByKey(
         Restaurant,
         "administrator",
-        (req as AuthRequest).user._id,
+        (req as AuthRequest).token.sub,
         req.body.restaurant,
         next,
       );
@@ -114,7 +98,7 @@ export function isRestaurantAdmin<T extends { restaurant: ObjectId }>(model: IMo
     update: async (req: Request, res: Response, next: NextFunction) => {
       return restaurantAdmin(
         model,
-        (req as AuthRequest).user._id,
+        (req as AuthRequest).token.sub,
         req.body._id,
         next,
       );
@@ -122,7 +106,7 @@ export function isRestaurantAdmin<T extends { restaurant: ObjectId }>(model: IMo
     delete: async (req: Request, res: Response, next: NextFunction) => {
       return restaurantAdmin(
         model,
-        (req as AuthRequest).user._id,
+        (req as AuthRequest).token.sub,
         req.params.id,
         next,
       );
@@ -133,18 +117,18 @@ export function isRestaurantAdmin<T extends { restaurant: ObjectId }>(model: IMo
 async function authorizeByKey<T>(
   model: IModel<T>,
   key: keyof IDoc<T>,
-  userId: object,
+  userId: string,
   resourceId: string,
   next: NextFunction,
 ) {
   const doc = await model.findById(resourceId);
 
   if (!doc) {
-    throw errors.notFound;
+    throw new NotFound();
   }
 
   if (String(doc[key]) != String(userId)) {
-    throw errors.unauthorized;
+    throw new Unauthorized();
   }
 
   next();
@@ -156,7 +140,7 @@ export function authByKey<T>(model: IModel<T>, key: keyof IDoc<T>) {
       return authorizeByKey(
         model,
         key,
-        (req as AuthRequest).user._id,
+        (req as AuthRequest).token.sub,
         req.body._id,
         next,
       );
@@ -165,7 +149,7 @@ export function authByKey<T>(model: IModel<T>, key: keyof IDoc<T>) {
       return authorizeByKey(
         model,
         key,
-        (req as AuthRequest).user._id,
+        (req as AuthRequest).token.sub,
         req.params.id,
         next,
       );

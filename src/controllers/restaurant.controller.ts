@@ -39,7 +39,7 @@ async function salesRating(
 
   const rest = {
     ...(restaurant as unknown as { _doc: IDocument<IRestaurant> })._doc,
-    sales: popularity,
+    sales: orders.length,
     rating: popularity > 0 ? ratingSum / popularity : null,
   };
 
@@ -71,7 +71,7 @@ export async function getRestaurant(req: Request, res: Response) {
 
 export async function createRestaurant(req: Request, res: Response) {
   const request = req as AuthRequest;
-  req.body.administrator = request.user._id;
+  req.body.administrator = request.token.sub;
 
   await restaurant.createResource(req, res);
 }
