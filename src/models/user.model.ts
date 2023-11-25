@@ -6,6 +6,11 @@ import Model, {
   ResourceSchema,
 } from "./model";
 
+export enum MfaStatus {
+  Password = 0,
+  Otp = 1,
+}
+
 const UserRoleValues = [
   "Usuario",
   "Administrador",
@@ -14,10 +19,12 @@ const UserRoleValues = [
 // Roles de usuario. Usuario, Administrador, etc...
 export const UserRole = EnumModel("UserRole", UserRoleValues);
 
-export interface Otp {
+export interface MfaSecret {
+  status: MfaStatus;
   secret: string;
   uri: string;
   qr: string;
+  updatedAt: Date;
 }
 
 export interface IUser extends IResource {
@@ -27,10 +34,15 @@ export interface IUser extends IResource {
   phone: number;
   birthday: Date;
   role: ObjectId;
-  otp?: Otp;
+  mfaSecret?: MfaSecret;
 }
 
-const OtpSchema = new Schema({
+const MfaSchema = new Schema({
+  status: {
+    type: Number,
+    default: MfaStatus.Password,
+    validate: (value: number) => value < Object.keys(MfaStatus).length,
+  },
   secret: {
     type: String,
     required: true,
@@ -42,6 +54,10 @@ const OtpSchema = new Schema({
   qr: {
     type: String,
     required: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: new Date(),
   },
 });
 
@@ -96,5 +112,5 @@ export const User = Model<IUser>("User", {
     immutable: true,
   },
 
-  otp: OtpSchema,
+  mfaSecret: MfaSchema,
 });

@@ -715,6 +715,43 @@
 					"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NTVhZGUxOGNhMDkxMjUxOGZkNWFmNGYiLCJleHAiOjE3MDA2NzI1MjUxMzcsImlhdCI6MTcwMDY2ODkyNX0.KkfqNqnUV_KjbU6kyP_7i1E65oNa7qjysXEUfBDYdJw"
 				}
 			},
+			"MfaSecret": {
+				"description": "Secreto que permite continuar con el 2fa.",
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"secret": {
+						"type": "string"
+					},
+					"uri": {
+						"type": "string"
+					},
+					"qr": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"status",
+					"secret",
+					"uri",
+					"qr",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"secret": "DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD",
+					"uri": "otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com?secret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD&issuer=Proyecto%20Backend",
+					"qr": "https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com%3Fsecret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD%26issuer=Proyecto%20Backend",
+					"updatedAt": "2030-10-20T04:03:42.164Z"
+				}
+			},
 			"UserCreation": {
 				"description": "Esquema para crear un usuario.",
 				"properties": {
@@ -1798,7 +1835,14 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/UserToken"
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/UserToken"
+										},
+										{
+											"$ref": "#/components/schemas/MfaSecret"
+										}
+									]
 								}
 							}
 						}
@@ -1824,6 +1868,49 @@
 						"description": "Contraseña del usuario",
 						"in": "query",
 						"name": "password",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users/auth": {
+			"post": {
+				"operationId": "Auth",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserToken"
+								}
+							}
+						}
+					}
+				},
+				"description": "Continua el flujo de inicio de sesión para administradores.\nRecibe un token de 2fa y lo valida para decidir si se le da acceso al usuario.",
+				"summary": "2FA Auth",
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID del usuario el cual está iniciando sesión.",
+						"in": "query",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Token de 2fa suministrado por la app autenticadora.",
+						"in": "query",
+						"name": "token",
 						"required": true,
 						"schema": {
 							"type": "string"

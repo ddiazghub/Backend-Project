@@ -7,6 +7,7 @@ import {
   getUser,
   getUsers,
   login,
+  mfaAuth,
   register,
   updateUser,
 } from "../controllers/user.controller";
@@ -21,6 +22,7 @@ router.get("/roles", getRoles);
 router.get("/login", login);
 router.get("/:id", getUser);
 router.post("/", hashPassword, register);
+router.post("/auth", mfaAuth);
 router.patch("/", authenticate, authorize.update, hashPassword, updateUser);
 router.delete("/:id", authenticate, authorize.delete, deleteUser);
 

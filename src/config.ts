@@ -19,6 +19,7 @@ function generateSecret(): string {
   return secret;
 }
 
+const APP_NAME = "Proyecto Backend";
 const PORT = Number(process.env.PORT ?? 8000);
 const SECRET = process.env.SECRET ?? generateSecret();
 const CONNECTION_STRING = process.env.CONNECTION_STRING ?? panic("CONNECTION_STRING env variable is required");
@@ -26,5 +27,6 @@ const CONNECTION_STRING = process.env.CONNECTION_STRING ?? panic("CONNECTION_STR
 export default {
   PORT,
   SECRET,
-  CONNECTION_STRING
+  CONNECTION_STRING,
+  APP_NAME
 };

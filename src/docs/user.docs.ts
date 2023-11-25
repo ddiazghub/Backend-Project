@@ -126,6 +126,23 @@ export interface Role {
 }
 
 /**
+ * Secreto que permite continuar con el 2fa.
+ * @example {
+ *   "secret": "DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD",
+ *   "uri": "otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com?secret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD&issuer=Proyecto%20Backend",
+*   "qr": "https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com%3Fsecret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD%26issuer=Proyecto%20Backend",
+ *   "updatedAt": "2030-10-20T04:03:42.164Z"
+ * }
+*/
+export interface MfaSecret {
+  status: number;
+  secret: string;
+  uri: string;
+  qr: string;
+  updatedAt: Date;
+}
+
+/**
  * CRUD de usuarios.
  */
 @Route("users")
@@ -169,6 +186,21 @@ export abstract class UserController extends Controller {
   public async login(
     @Query() email: string,
     @Query() password: string,
+  ): Promise<UserToken | MfaSecret> {
+    return mock();
+  }
+
+  /**
+   * Continua el flujo de inicio de sesión para administradores.
+   * Recibe un token de 2fa y lo valida para decidir si se le da acceso al usuario.
+   * @param user ID del usuario el cual está iniciando sesión.
+   * @param token Token de 2fa suministrado por la app autenticadora.
+   * @summary 2FA Auth
+   */
+  @Post("auth")
+  public async auth(
+    @Query() user: string,
+    @Query() token: string,
   ): Promise<UserToken> {
     return mock();
   }
