@@ -92,13 +92,13 @@ export interface User {
  * Esquema con el cual el backend retorna un usuario.
  * @example {
  *   "user": {
- *   "_id": "6531618e6025da22956875a6",
- *   "name": "user",
- *   "lastName": "admin",
- *   "email": "user@email.com",
- *   "phone": 10000000000,
- *   "birthday": "1995-10-20T04:03:42.164Z",
- *   "role": {
+ *     "_id": "6531618e6025da22956875a6",
+ *     "name": "user",
+ *     "lastName": "admin",
+ *     "email": "user@email.com",
+ *     "phone": 10000000000,
+ *     "birthday": "1995-10-20T04:03:42.164Z",
+ *     "role": {
  *     "_id": "65305445746510934b074e05",
  *     "name": "Administrador"
  *   },
