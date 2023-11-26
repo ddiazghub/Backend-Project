@@ -27,14 +27,17 @@ export interface MfaSecret {
   updatedAt: Date;
 }
 
-export interface IUser extends IResource {
+export interface IBaseUser extends IResource {
   lastName: string;
   email: string;
   passwordHash: string;
   phone: number;
   birthday: Date;
-  role: ObjectId;
   mfaSecret?: MfaSecret;
+}
+
+export interface IUser extends IBaseUser {
+  role: ObjectId;
 }
 
 const MfaSchema = new Schema({
