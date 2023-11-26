@@ -4,7 +4,19 @@ import app from "../app";
 import { generateJwtToken } from "../controllers/user.controller";
 import { DisplayUserToken } from "../models/auth";
 import { IDoc } from "../models/model";
-import { IUser, MfaSecret } from "../models/user.model";
+import { IUser, MfaSecret, UserRole } from "../models/user.model";
+import { TestUser, getInitialUsers } from "./testData";
+import { ReverseEnumMapping } from "../controllers/controller";
+
+let users: TestUser[] | undefined;
+
+export async function getUsers(): Promise<TestUser[]> {
+  const Roles = ReverseEnumMapping(UserRole);
+  const roles = await Roles();
+  users ??= await getInitialUsers(roles);
+
+  return users;
+}
 
 export function verifyUser(user: IUser) {
   const properties = [
@@ -82,4 +94,3 @@ export async function adminLogin(email: string, password: string) {
 
   return generateJwtToken(user);
 }
-

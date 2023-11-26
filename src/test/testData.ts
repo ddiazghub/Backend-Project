@@ -1,12 +1,20 @@
 import { generateSecret } from "node-2fa";
-import { EnumMap } from "../models/model";
-import { IBaseUser, MfaSecret } from "../models/user.model";
+import { EnumMap, IDoc } from "../models/model";
+import { IBaseUser, IUser, MfaSecret } from "../models/user.model";
 import config from "../config";
 import argon2 from "argon2";
 
 export interface TestUser extends IBaseUser {
   role: string;
   mfaSecret?: MfaSecret;
+}
+
+export interface TestRestaurant {
+  name: string;
+  disabled: boolean;
+  administrator: string;
+  category: string;
+  deliveryTime: number;
 }
 
 export async function getInitialUsers(roles: EnumMap): Promise<TestUser[]> {
@@ -58,6 +66,48 @@ export async function getInitialUsers(roles: EnumMap): Promise<TestUser[]> {
       role: roles["usuario"],
       passwordHash: await argon2.hash("123456"),
       disabled: false,
+    },
+  ];
+}
+
+export async function getInitialRestaurants(
+  categories: EnumMap,
+  users: IDoc<IUser>[],
+): Promise<TestRestaurant[]> {
+  const getUserByEmail = (email: string) => {
+    return users.find((user) => user.email.toString().startsWith(email));
+  };
+  const admin1 = getUserByEmail("admin@")?._id as unknown as string;
+  const admin2 = getUserByEmail("admin2")?._id as unknown as string;
+
+  return [
+    {
+      name: "Mc Donalds",
+      category: categories["comida rapida"],
+      disabled: false,
+      administrator: admin1,
+      deliveryTime: 20,
+    },
+    {
+      name: "Burger king",
+      category: categories["comida rapida"],
+      disabled: false,
+      administrator: admin2,
+      deliveryTime: 25,
+    },
+    {
+      name: "Salvator's pizza",
+      category: categories["italiano"],
+      disabled: false,
+      administrator: admin1,
+      deliveryTime: 30,
+    },
+    {
+      name: "Teriyaki",
+      category: categories["asiatico"],
+      disabled: false,
+      administrator: admin2,
+      deliveryTime: 40,
     },
   ];
 }
