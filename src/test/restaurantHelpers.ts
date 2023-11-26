@@ -5,11 +5,14 @@ import { ReverseEnumMapping } from "../controllers/controller";
 import { IDoc } from "../models/model";
 import { IRestaurant, RestaurantCategory } from "../models/restaurant.model";
 import { IUser } from "../models/user.model";
-import { TestRestaurant, getInitialRestaurants } from "./testData";
+import { getInitialRestaurants, TestRestaurant } from "./testData";
+import { RestaurantCreation } from "../docs/restaurant.docs";
 
 let restaurants: TestRestaurant[] | undefined;
-  
-export async function getRestaurants(users: IDoc<IUser>[] = []): Promise<TestRestaurant[]> {
+
+export async function getRestaurants(
+  users: IDoc<IUser>[] = [],
+): Promise<TestRestaurant[]> {
   const Category = ReverseEnumMapping(RestaurantCategory);
   const categories = await Category();
   restaurants ??= await getInitialRestaurants(categories, users);
@@ -41,3 +44,15 @@ export function verifyRestaurant(restaurant: IRestaurant) {
   }
 }
 
+export async function createRestaurant(
+  restaurant: RestaurantCreation,
+  token: string,
+) {
+  const response = await request(app)
+    .post("/restaurants")
+    .set("Accept", "application/json")
+    .set("Authorization", `Bearer ${token}`)
+    .send(restaurant);
+
+  return response;
+}

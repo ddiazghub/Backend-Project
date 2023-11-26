@@ -1,11 +1,11 @@
 import app from "../app";
 import request from "supertest";
 import { describe, expect, test } from "@jest/globals";
-import { verifyRestaurant, verifyRestaurantCount } from "./restaurantHelpers";
+import { createRestaurant, verifyRestaurant, verifyRestaurantCount } from "./restaurantHelpers";
 import { RestaurantCategory } from "../models/restaurant.model";
 import { ReverseEnumMapping } from "../controllers/controller";
 import { RestaurantCreation } from "../docs/restaurant.docs";
-import { adminLogin } from "./userHelpers";
+import { adminLogin, userLogin } from "./userHelpers";
 
 export default () => {
   describe("Restaurant routes", () => {
@@ -35,13 +35,13 @@ export default () => {
       };
 
       const admin = await adminLogin("admin@email.com", "admin");
+      const user = await userLogin("user@email.com", "123456");
+      const failed1 = createRestaurant(restaurant, "");
+      const failed2 = createRestaurant(restaurant, user.token);
+      const  response = await createRestaurant(restaurant, admin.token);
 
-      const response = await request(app)
-        .post("/restaurants")
-        .set("Accept", "application/json")
-        .set("Authorization",`Bearer ${admin.token}`)
-        .send(restaurant);
-
+      expect((await failed1).status).toBe(500);
+      expect((await failed2).status).toBe(401);
       expect(response.status).toBe(200);
       verifyRestaurant(response.body);
       await verifyRestaurantCount(5);
