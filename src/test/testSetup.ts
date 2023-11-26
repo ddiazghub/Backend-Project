@@ -5,7 +5,7 @@ import { Order, OrderState } from "../models/order.model";
 import { Product, ProductCategory } from "../models/product.model";
 import { Restaurant, RestaurantCategory } from "../models/restaurant.model";
 import { IUser, User, UserRole } from "../models/user.model";
-import { TestUser, getInitialUsers } from "./data";
+import { TestUser, getInitialUsers } from "./testData";
 
 const enums = [UserRole, RestaurantCategory, ProductCategory, OrderState];
 const models = [...enums, User, Restaurant, Product, Order];

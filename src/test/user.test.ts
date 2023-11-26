@@ -1,50 +1,14 @@
 import { afterAll, beforeAll, describe, expect, test } from "@jest/globals";
-import { getUsers, setup, teardown } from "./setup";
+import { setup, teardown } from "./testSetup";
 import request from "supertest";
 import app from "../app";
-import { IUser, User, UserRole } from "../models/user.model";
-import { UserCreation, UserToken } from "../docs/user.docs";
+import { UserRole } from "../models/user.model";
+import { UserCreation } from "../docs/user.docs";
 import { ReverseEnumMapping } from "../controllers/controller";
-import { DisplayUserToken } from "../models/auth";
+import { adminLogin, getUser, userLogin, verifyUser, verifyUserCount } from "./testHelpers";
 
 beforeAll(setup);
 afterAll(teardown);
-
-function verifyUser(user: IUser) {
-  const properties = [
-    "email",
-    "name",
-    "lastName",
-    "phone",
-    "role",
-    "birthday",
-  ];
-
-  for (const property of properties) {
-    expect(user).toHaveProperty(property);
-  }
-}
-
-async function verifyUserCount(count: number = 4) {
-  const response = await request(app)
-    .get("/users")
-    .set("Accept", "application/json");
-
-  expect(response.status).toBe(200);
-  expect(response.body.length).toBe(count);
-}
-
-async function login(email: string, password: string) {
-  const response = await request(app)
-    .get(
-      `/users/login?email=${encodeURI(email)}&password=${encodeURI(password)}`,
-    )
-    .set("Accept", "application/json");
-
-  expect(response.status).toBe(200);
-
-  return response.body as DisplayUserToken;
-}
 
 describe("User routes", () => {
   test("Get all users", async () => verifyUserCount(4));
@@ -63,10 +27,12 @@ describe("User routes", () => {
   });
 
   test("User login", async () => {
-    const token = await login("user@email.com", "123456");
+    // Login de usuario normal
+    let token = await userLogin("user@email.com", "123456");
+    verifyUser(token.user);
 
-    expect(token).toHaveProperty("token");
-    expect(token).toHaveProperty("user");
+    // Login de administrador (Require 2fa)
+    token = await adminLogin("admin@email.com", "admin");
     verifyUser(token.user);
   });
 
@@ -101,18 +67,13 @@ test("Get User by ID", async () => {
     .set("Accept", "application/json");
 
   const userId = responseUsers.body[0]._id;
-
-  const response = await request(app)
-    .get(`/users/${userId}`)
-    .set("Accept", "application/json");
-
-  expect(response.status).toBe(200);
+  const user = await getUser(userId);
 });
 
 test("Delete user", async () => {
   const email = "david@email.com";
   const password = "123456";
-  const token = await login(email, password);
+  const token = await userLogin(email, password);
 
   const deleteRequest = (jwt: string = "") => {
     return request(app)

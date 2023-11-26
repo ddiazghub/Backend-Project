@@ -44,7 +44,7 @@ export async function getRoles(req: Request, res: Response) {
   await role.getAll(req, res);
 }
 
-function generateJwtToken(user: IDoc<IUser>): DisplayUserToken {
+export function generateJwtToken(user: IDoc<IUser>): DisplayUserToken {
   const payload: Token = {
     sub: user._id.toString(),
     exp: Date.now() + MS_IN_HOUR,
