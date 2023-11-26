@@ -6,7 +6,7 @@ import { IDoc } from "../models/model";
 import { IRestaurant, RestaurantCategory } from "../models/restaurant.model";
 import { IUser } from "../models/user.model";
 import { getInitialRestaurants, TestRestaurant } from "./testData";
-import { RestaurantCreation } from "../docs/restaurant.docs";
+import { RestaurantCreation, RestaurantUpdate } from "../docs/restaurant.docs";
 
 let restaurants: TestRestaurant[] | undefined;
 
@@ -20,9 +20,19 @@ export async function getRestaurants(
   return restaurants;
 }
 
-export async function verifyRestaurantCount(count: number = 4) {
+export async function getRestaurant(id: string) {
   const response = await request(app)
-    .get("/restaurants")
+    .get(`/restaurants/${id}`)
+    .set("Accept", "application/json");
+
+  expect(response.status).toBe(200);
+
+  return response.body as IDoc<IRestaurant>;
+}
+
+export async function verifyRestaurantCount(count: number = 4, query: string = "") {
+  const response = await request(app)
+    .get(encodeURI(`/restaurants?${query}`))
     .set("Accept", "application/json");
 
   expect(response.status).toBe(200);
@@ -53,6 +63,31 @@ export async function createRestaurant(
     .set("Accept", "application/json")
     .set("Authorization", `Bearer ${token}`)
     .send(restaurant);
+
+  return response;
+}
+
+export async function updateRestaurant(
+  restaurant: RestaurantUpdate,
+  token: string,
+) {
+  const response = await request(app)
+    .patch("/restaurants")
+    .set("Accept", "application/json")
+    .set("Authorization", `Bearer ${token}`)
+    .send(restaurant);
+
+  return response;
+}
+
+export async function deleteRestaurant(
+  id: string,
+  token: string,
+) {
+  const response = await request(app)
+    .delete(`/restaurants/${id}`)
+    .set("Accept", "application/json")
+    .set("Authorization", `Bearer ${token}`);
 
   return response;
 }

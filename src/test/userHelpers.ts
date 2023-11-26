@@ -5,7 +5,7 @@ import { generateJwtToken } from "../controllers/user.controller";
 import { DisplayUserToken } from "../models/auth";
 import { IDoc } from "../models/model";
 import { IUser, MfaSecret, UserRole } from "../models/user.model";
-import { TestUser, getInitialUsers } from "./testData";
+import { getInitialUsers, TestUser } from "./testData";
 import { ReverseEnumMapping } from "../controllers/controller";
 
 let users: TestUser[] | undefined;
@@ -93,4 +93,11 @@ export async function adminLogin(email: string, password: string) {
   const user = await getUser(secret._id);
 
   return generateJwtToken(user);
+}
+
+export async function deleteUser(userId: string, jwt: string = "") {
+  return request(app)
+    .delete(`/users/${userId}`)
+    .set("Authorization", `Bearer ${jwt}`)
+    .set("Accept", "application/json");
 }

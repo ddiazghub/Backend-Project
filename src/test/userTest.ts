@@ -6,6 +6,7 @@ import { UserCreation } from "../docs/user.docs";
 import { ReverseEnumMapping } from "../controllers/controller";
 import {
   adminLogin,
+  deleteUser,
   getUser,
   userLogin,
   verifyUser,
@@ -62,33 +63,28 @@ export default () => {
       verifyUser(response.body);
       await verifyUserCount(5);
     });
+
     test("Get User by ID", async () => {
       const responseUsers = await request(app)
         .get("/users")
         .set("Accept", "application/json");
 
       const userId = responseUsers.body[0]._id;
-      const user = await getUser(userId);
+      await getUser(userId);
     });
 
     test("Delete user", async () => {
       const email = "david@email.com";
       const password = "123456";
       const token = await userLogin(email, password);
-
-      const deleteRequest = (jwt: string = "") => {
-        return request(app)
-          .delete(`/users/${token.user._id}`)
-          .set("Authorization", `Bearer ${jwt}`)
-          .set("Accept", "application/json");
-      };
+      const userId = token.user._id.toString();
 
       // Solicitud sin jwt. Debe fallar.
-      const failed = await deleteRequest();
+      const failed = await deleteUser(userId);
       expect(failed.status).toBe(500);
 
       // Solicitud con la jwt del usuario. Debe ejecutar el delete.
-      const response = await deleteRequest(token.token);
+      const response = await deleteUser(userId, token.token);
       expect(response.status).toBe(200);
 
       await verifyUserCount(4);
