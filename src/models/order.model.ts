@@ -61,7 +61,6 @@ export const Order = Model<IOrder>("Order", {
   deliveryTime: {
     type: Date,
     required: true,
-    min: new Date(),
   },
 
   // Calificación del usuario a la orden. Es nula hasta que el pedido llegue a la etapa de entregado
