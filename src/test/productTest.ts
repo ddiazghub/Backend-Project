@@ -6,8 +6,12 @@ import { Restaurant } from "../models/restaurant.model";
 import { ReverseEnumMapping } from "../controllers/controller";
 import { ProductCategory } from "../models/product.model";
 import { ProductCreation } from "../docs/product.docs";
-import { createProduct, deleteProductById, getProductById, getProducts2 } from "./productHelpers";
-
+import {
+  createProduct,
+  deleteProductById,
+  getProductById,
+  getProducts2,
+} from "./productHelpers";
 
 export default () => {
   describe("Products routes", () => {
@@ -93,10 +97,8 @@ export default () => {
     const id: string = productsResponse.body[0]._id;
 
     const deleteProductResponse: Response = await deleteProductById(
-      (
-        await admin2
-      ).token,
-      id
+      admin2.token,
+      id,
     );
 
     expect(deleteProductResponse.statusCode).toBe(200);
