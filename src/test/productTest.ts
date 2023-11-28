@@ -42,6 +42,7 @@ export default () => {
       const response: Response = await createProduct(token, product);
       expect(response.status).toBe(200);
     });
+
     test("Editar Producto", async () => {
       const admin2 = adminLogin("admin2@email.com", "admin");
 
@@ -75,35 +76,35 @@ export default () => {
       expect(updatedProductResponse.body.name).toBe("Sushi Latino");
       expect(updatedProductResponse.body.cost).toBe(90);
     });
-  });
 
-  test("Get products categories", async () => {
-    const response: Response = await getProducts2();
-    expect(response.statusCode).toBe(200);
-    expect(response.body[0]).toHaveProperty("name");
-    expect(response.body[0]).toHaveProperty("_id");
-  });
+    test("Get products categories", async () => {
+      const response: Response = await getProducts2();
+      expect(response.statusCode).toBe(200);
+      expect(response.body[0]).toHaveProperty("name");
+      expect(response.body[0]).toHaveProperty("_id");
+    });
 
-  test("Get Product by ID", async () => {
-    const productsResponse: Response = await getProducts2();
-    const id: string = productsResponse.body[0]._id;
-    const productByIdResponse: Response = await getProductById(id);
-    expect(productByIdResponse.statusCode).toBe(200);
-  });
+    test("Get Product by ID", async () => {
+      const productsResponse: Response = await getProducts2();
+      const id: string = productsResponse.body[0]._id;
+      const productByIdResponse: Response = await getProductById(id);
+      expect(productByIdResponse.statusCode).toBe(200);
+    });
 
-  test("Delete Product by ID", async () => {
-    const admin2 = await adminLogin("admin@email.com", "admin");
-    const productsResponse: Response = await getProducts2();
-    const id: string = productsResponse.body[0]._id;
+    test("Delete Product by ID", async () => {
+      const admin2 = await adminLogin("admin@email.com", "admin");
+      const productsResponse: Response = await getProducts2();
+      const id: string = productsResponse.body[0]._id;
 
-    const deleteProductResponse: Response = await deleteProductById(
-      admin2.token,
-      id,
-    );
+      const deleteProductResponse: Response = await deleteProductById(
+        admin2.token,
+        id,
+      );
 
-    expect(deleteProductResponse.statusCode).toBe(200);
+      expect(deleteProductResponse.statusCode).toBe(200);
 
-    const response: Response = await getProducts2();
-    expect(response.body.length).toBe(6);
+      const response: Response = await getProducts2();
+      expect(response.body.length).toBe(6);
+    });
   });
 };
