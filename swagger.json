@@ -746,6 +746,7 @@
 				"type": "object",
 				"additionalProperties": false,
 				"example": {
+					"message": "Envíe el token generado por su app 2fa a la ruta /users/auth para terminar el inicio de sesión",
 					"secret": "DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD",
 					"uri": "otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com?secret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD&issuer=Proyecto%20Backend",
 					"qr": "https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=otpauth://totp/Proyecto%20Backend%3Aadmin%40email.com%3Fsecret=DKKEHIJCUSPDRYQO6LEZOFKVZALASSWD%26issuer=Proyecto%20Backend",

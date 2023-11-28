@@ -12,5 +12,5 @@ app.listen(config.PORT, async () => {
   await mongoose.connect(config.CONNECTION_STRING);
   await Promise.all(enums.map(seedEnum));
 
-  console.log(`Server has started at http://localhost:${config.PORT}...`);
+  console.log(`Server has started at http://localhost:${config.PORT} ...`);
 });

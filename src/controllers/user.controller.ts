@@ -74,7 +74,8 @@ export async function login(req: Request, res: Response) {
       };
 
       await User.findByIdAndUpdate(user._id, { mfaSecret: newSecret });
-      res.status(200).json({ ...newSecret, _id: user._id });
+      const message = "Envíe el token generado por su app 2fa a la ruta /users/auth para terminar el inicio de sesión";
+      res.status(200).json({ ...newSecret, _id: user._id, message });
     } else {
       const u = await removeCredentials(user) as IDoc<IUser>;
       const token = generateJwtToken(u);
